@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_new"
+            android:title="Nuevo" />
+        <item
+            android:id="@+id/nav_gallery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Ensaladas y Entradas" />
+        <item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Sopas" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Barra Sushi" />
+        <item
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Combos" />
+        <item
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Cocina Caliente" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Extras" />
+        <item
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Postres" />
+        <item
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Bebidas" />
+        <item
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Ubicaciones" />
+    </group>
+
+</menu>
