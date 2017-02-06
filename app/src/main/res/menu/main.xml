@@ -14,4 +14,10 @@
             android:visible="false"
             app:actionViewClass="android.support.v7.widget.SearchView"
             app:showAsAction="ifRoom|collapseActionView" />
+
+    <item
+        android:id="@+id/action_cart"
+        android:icon="@drawable/ic_shopping_cart"
+        android:title="Carrito"
+        android:visible="true" />
 </menu>

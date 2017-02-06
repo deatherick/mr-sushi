@@ -55,15 +55,25 @@ public class CategoriesFragment extends Fragment {
         //Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         // Construct the data source
+        int[] covers = new int[]{
+                R.drawable.ensaldas_entradas,
+                R.drawable.sopas,
+                R.drawable.sushi,
+                R.drawable.combos,
+                R.drawable.cocina_caliente,
+                R.drawable.extras,
+                R.drawable.postres,
+                R.drawable.bebidas};
+
         ArrayList<ObjectItem> arrayOfCategories = new ArrayList<ObjectItem>();
-        arrayOfCategories.add(new ObjectItem(1, "Ensaladas y entradas"));
-        arrayOfCategories.add(new ObjectItem(2, "Sopas"));
-        arrayOfCategories.add(new ObjectItem(3, "Barra Sushi"));
-        arrayOfCategories.add(new ObjectItem(4, "Combos"));
-        arrayOfCategories.add(new ObjectItem(5, "Cocina Caliente"));
-        arrayOfCategories.add(new ObjectItem(6, "Extras"));
-        arrayOfCategories.add(new ObjectItem(7, "Postres"));
-        arrayOfCategories.add(new ObjectItem(8, "Bebidas"));
+        arrayOfCategories.add(new ObjectItem(1, "Ensaladas y entradas", covers[0]));
+        arrayOfCategories.add(new ObjectItem(2, "Sopas", covers[1]));
+        arrayOfCategories.add(new ObjectItem(3, "Barra Sushi", covers[2]));
+        arrayOfCategories.add(new ObjectItem(4, "Combos", covers[3]));
+        arrayOfCategories.add(new ObjectItem(5, "Cocina Caliente", covers[4]));
+        arrayOfCategories.add(new ObjectItem(6, "Extras", covers[5]));
+        arrayOfCategories.add(new ObjectItem(7, "Postres", covers[6]));
+        arrayOfCategories.add(new ObjectItem(8, "Bebidas", covers[7]));
         adapter = new CategoryAdapter(getActivity(), arrayOfCategories);
         setHasOptionsMenu(true);
 

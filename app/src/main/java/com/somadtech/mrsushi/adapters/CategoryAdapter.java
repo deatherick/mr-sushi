@@ -68,6 +68,7 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
         }
         // Lookup view for data population
         holder.name.setText(employeeArrayList.get(position).getName());
+        holder.name.setBackgroundResource(employeeArrayList.get(position).getItemImage());
         // Populate the data into the template view using the data object
 
         // Return the completed view to render on screen
