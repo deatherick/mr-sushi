@@ -9,7 +9,7 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import com.somadtech.mrsushi.R;
-import com.somadtech.mrsushi.entities.ObjectItem;
+import com.somadtech.mrsushi.entities.Category;
 
 import java.util.ArrayList;
 
@@ -20,12 +20,12 @@ import static com.somadtech.mrsushi.R.id.txtCatName;
  * Project Name: Mrsushi
  */
 
-public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
+public class CategoryAdapter extends ArrayAdapter<Category> {
 
-    public ArrayList<ObjectItem> employeeArrayList;
-    public ArrayList<ObjectItem> orig;
+    public ArrayList<Category> employeeArrayList;
+    public ArrayList<Category> orig;
 
-    public CategoryAdapter(Context context, ArrayList<ObjectItem> users) {
+    public CategoryAdapter(Context context, ArrayList<Category> users) {
         super(context, 0, users);
         this.employeeArrayList = users;
     }
@@ -42,7 +42,7 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
     }
 
     @Override
-    public ObjectItem getItem(int position) {
+    public Category getItem(int position) {
         return employeeArrayList.get(position);
     }
 
@@ -54,7 +54,7 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
-        //ObjectItem obj = getItem(position);
+        //Category obj = getItem(position);
         // Check if an existing view is being reused, otherwise inflate the view
         CategoryHolder holder;
         if (convertView == null) {
@@ -67,7 +67,7 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
             holder = (CategoryHolder) convertView.getTag();
         }
         // Lookup view for data population
-        holder.name.setText(employeeArrayList.get(position).getName());
+        holder.name.setText(employeeArrayList.get(position).getItemName());
         holder.name.setBackgroundResource(employeeArrayList.get(position).getItemImage());
         // Populate the data into the template view using the data object
 
@@ -82,13 +82,13 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 final FilterResults oReturn = new FilterResults();
-                final ArrayList<ObjectItem> results = new ArrayList<ObjectItem>();
+                final ArrayList<Category> results = new ArrayList<Category>();
                 if (orig == null)
                     orig = employeeArrayList;
                 if (constraint != null) {
                     if (orig != null && orig.size() > 0) {
-                        for (final ObjectItem g : orig) {
-                            if (g.getName().toLowerCase()
+                        for (final Category g : orig) {
+                            if (g.getItemName().toLowerCase()
                                     .contains(constraint.toString()))
                                 results.add(g);
                         }
@@ -101,7 +101,7 @@ public class CategoryAdapter extends ArrayAdapter<ObjectItem> {
             @Override
             protected void publishResults(CharSequence constraint,
                                           FilterResults results) {
-                employeeArrayList = (ArrayList<ObjectItem>) results.values;
+                employeeArrayList = (ArrayList<Category>) results.values;
                 notifyDataSetChanged();
             }
         };

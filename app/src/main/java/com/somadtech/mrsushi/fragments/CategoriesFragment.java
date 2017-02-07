@@ -21,7 +21,7 @@ import android.widget.ListView;
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.CategoryAdapter;
-import com.somadtech.mrsushi.entities.ObjectItem;
+import com.somadtech.mrsushi.entities.Category;
 
 import java.util.ArrayList;
 
@@ -65,15 +65,15 @@ public class CategoriesFragment extends Fragment {
                 R.drawable.postres,
                 R.drawable.bebidas};
 
-        ArrayList<ObjectItem> arrayOfCategories = new ArrayList<ObjectItem>();
-        arrayOfCategories.add(new ObjectItem(1, "Ensaladas y entradas", covers[0]));
-        arrayOfCategories.add(new ObjectItem(2, "Sopas", covers[1]));
-        arrayOfCategories.add(new ObjectItem(3, "Barra Sushi", covers[2]));
-        arrayOfCategories.add(new ObjectItem(4, "Combos", covers[3]));
-        arrayOfCategories.add(new ObjectItem(5, "Cocina Caliente", covers[4]));
-        arrayOfCategories.add(new ObjectItem(6, "Extras", covers[5]));
-        arrayOfCategories.add(new ObjectItem(7, "Postres", covers[6]));
-        arrayOfCategories.add(new ObjectItem(8, "Bebidas", covers[7]));
+        ArrayList<Category> arrayOfCategories = new ArrayList<Category>();
+        arrayOfCategories.add(new Category(1, "Ensaladas y entradas", covers[0]));
+        arrayOfCategories.add(new Category(2, "Sopas", covers[1]));
+        arrayOfCategories.add(new Category(3, "Barra Sushi", covers[2]));
+        arrayOfCategories.add(new Category(4, "Combos", covers[3]));
+        arrayOfCategories.add(new Category(5, "Cocina Caliente", covers[4]));
+        arrayOfCategories.add(new Category(6, "Extras", covers[5]));
+        arrayOfCategories.add(new Category(7, "Postres", covers[6]));
+        arrayOfCategories.add(new Category(8, "Bebidas", covers[7]));
         adapter = new CategoryAdapter(getActivity(), arrayOfCategories);
         setHasOptionsMenu(true);
 
@@ -101,7 +101,7 @@ public class CategoriesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3)
             {
-                ObjectItem value = (ObjectItem)adapter.getItemAtPosition(position);
+                Category value = (Category)adapter.getItemAtPosition(position);
                 //Intent intent = new Intent(getActivity(), ProductsFragment.class);
                 //startActivity(intent);
                 ProductsFragment fragment2 = new ProductsFragment();

@@ -12,9 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.somadtech.mrsushi.R;
-import com.somadtech.mrsushi.entities.Album;
+import com.somadtech.mrsushi.entities.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,7 @@ import java.util.List;
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Album> albumList;
+    private List<Product> productList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
@@ -42,9 +42,9 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
     }
 
 
-    public AlbumsAdapter(Context mContext, List<Album> albumList) {
+    public AlbumsAdapter(Context mContext, List<Product> productList) {
         this.mContext = mContext;
-        this.albumList = albumList;
+        this.productList = productList;
     }
 
     @Override
@@ -57,12 +57,12 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Album album = albumList.get(position);
-        holder.title.setText(album.getName());
-        holder.count.setText("Q" + album.getNumOfSongs());
+        Product product = productList.get(position);
+        holder.title.setText(product.getName());
+        holder.count.setText("Q" + product.getOriginalPrice());
 
-        // loading album cover using Glide library
-        Glide.with(mContext).load(album.getThumbnail()).into(holder.thumbnail);
+        // loading product cover using Glide library
+        //Glide.with(mContext).load(product.getThumbnail()).into(holder.thumbnail);
 
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,12 +109,12 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return productList.size();
     }
 
-    public void setFilter(List<Album> countryModels) {
-        albumList = new ArrayList<>();
-        albumList.addAll(countryModels);
+    public void setFilter(List<Product> countryModels) {
+        productList = new ArrayList<>();
+        productList.addAll(countryModels);
         notifyDataSetChanged();
     }
 

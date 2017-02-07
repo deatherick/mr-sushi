@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.AlbumsAdapter;
-import com.somadtech.mrsushi.entities.Album;
+import com.somadtech.mrsushi.entities.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ProductsFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
-    private List<Album> albumList;
+    private List<Product> productList;
     FragmentActivity listener;
 
     @Override
@@ -90,8 +90,8 @@ public class ProductsFragment extends Fragment {
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
 
-        albumList = new ArrayList<>();
-        adapter = new AlbumsAdapter(getActivity(), albumList);
+        productList = new ArrayList<>();
+        adapter = new AlbumsAdapter(getActivity(), productList);
 
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3
 
@@ -155,35 +155,35 @@ public class ProductsFragment extends Fragment {
                 R.drawable.image5,
                 R.drawable.image1};
 
-        Album a = new Album("Calamares Tempura", 45, covers[0]);
-        albumList.add(a);
+        Product a = new Product("Calamares Tempura", 45, covers[0]);
+        productList.add(a);
 
-        a = new Album("Manchego Maki", 52, covers[1]);
-        albumList.add(a);
+        a = new Product("Manchego Maki", 52, covers[1]);
+        productList.add(a);
 
-        a = new Album("Kani Roll", 58, covers[2]);
-        albumList.add(a);
+        a = new Product("Kani Roll", 58, covers[2]);
+        productList.add(a);
 
-        a = new Album("Lotto Roll", 65, covers[3]);
-        albumList.add(a);
+        a = new Product("Lotto Roll", 65, covers[3]);
+        productList.add(a);
 
-        a = new Album("Meshi Ebi Maki", 74, covers[4]);
-        albumList.add(a);
+        a = new Product("Meshi Ebi Maki", 74, covers[4]);
+        productList.add(a);
 
-        a = new Album("Calamares Tempura", 45, covers[5]);
-        albumList.add(a);
+        a = new Product("Calamares Tempura", 45, covers[5]);
+        productList.add(a);
 
-        a = new Album("Manchego Maki", 52, covers[6]);
-        albumList.add(a);
+        a = new Product("Manchego Maki", 52, covers[6]);
+        productList.add(a);
 
-        a = new Album("Kani Roll", 58, covers[7]);
-        albumList.add(a);
+        a = new Product("Kani Roll", 58, covers[7]);
+        productList.add(a);
 
-        a = new Album("Lotto Roll", 65, covers[8]);
-        albumList.add(a);
+        a = new Product("Lotto Roll", 65, covers[8]);
+        productList.add(a);
 
-        a = new Album("Meshi Ebi Maki", 74, covers[9]);
-        albumList.add(a);
+        a = new Product("Meshi Ebi Maki", 74, covers[9]);
+        productList.add(a);
 
         adapter.notifyDataSetChanged();
     }
@@ -260,7 +260,7 @@ public class ProductsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                final List<Album> filteredModelList = filter(albumList, newText);
+                final List<Product> filteredModelList = filter(productList, newText);
 
                 adapter.setFilter(filteredModelList);
 
@@ -294,10 +294,10 @@ public class ProductsFragment extends Fragment {
     }
 
 
-    private List<Album> filter(List<Album> models, String query) {
+    private List<Product> filter(List<Product> models, String query) {
         query = query.toLowerCase();
-        final List<Album> filteredModelList = new ArrayList<>();
-        for (Album model : models) {
+        final List<Product> filteredModelList = new ArrayList<>();
+        for (Product model : models) {
             final String text = model.getName().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);

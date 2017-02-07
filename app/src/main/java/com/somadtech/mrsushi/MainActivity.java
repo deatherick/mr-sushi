@@ -1,5 +1,7 @@
 package com.somadtech.mrsushi;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -12,11 +14,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.Cache;
+import com.android.volley.Network;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.BasicNetwork;
+import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
+import com.android.volley.toolbox.StringRequest;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
+import com.somadtech.mrsushi.schemes.CategoryContract;
+import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +71,60 @@ public class MainActivity extends AppCompatActivity
                     .add(R.id.fragment_container, firstFragment)
                     .commit();
         }
+
+
+        // Gets the data repository in write mode
+        //SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        RequestQueue mRequestQueue;
+
+        // Instantiate the cache
+        Cache cache = new DiskBasedCache(getCacheDir(), 1024 * 1024); // 1MB cap
+
+        // Set up the network to use HttpURLConnection as the HTTP client.
+        Network network = new BasicNetwork(new HurlStack());
+
+        // Instantiate the RequestQueue with the cache and network.
+        mRequestQueue = new RequestQueue(cache, network);
+
+        // Start the queue
+        mRequestQueue.start();
+
+        String url ="http://www.tedimedia.com/backoffice/api.locations.php";
+
+        // Create a new map of values, where column names are the keys
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("MainActivity", response);
+                        // Do something with the response
+                        Category myCategory = new Category(
+                                1,
+                                "Bebidas y mas",
+                                R.drawable.image2
+                        );
+
+                        // Insert the new row, returning the primary key value of the new row
+                        long newRowId = mDbHelper.createCategory(myCategory);
+                        Log.i("Row insercion", String.valueOf(newRowId));
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                    }
+                });
+        MySingleton.getInstance(this).addToRequestQueue(stringRequest);
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDbHelper.closeDB();
+        super.onDestroy();
     }
 
     @Override

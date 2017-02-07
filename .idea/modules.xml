@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Mrsushi.iml" filepath="$PROJECT_DIR$/Mrsushi.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mrsushi-android.iml" filepath="$PROJECT_DIR$/mrsushi-android.iml" />
     </modules>
   </component>
 </project>
