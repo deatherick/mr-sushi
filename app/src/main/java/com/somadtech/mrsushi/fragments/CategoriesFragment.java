@@ -22,6 +22,7 @@ import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.CategoryAdapter;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class CategoriesFragment extends Fragment {
     CategoryAdapter adapter;
     FragmentActivity listener;
     ListView mListView;
-
+    MrSushiDbHelper mDbHelper;
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
     // This does not mean the Activity is fully initialized.
@@ -55,26 +56,27 @@ public class CategoriesFragment extends Fragment {
         //Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         // Construct the data source
-        int[] covers = new int[]{
-                R.drawable.ensaldas_entradas,
-                R.drawable.sopas,
-                R.drawable.sushi,
-                R.drawable.combos,
-                R.drawable.cocina_caliente,
-                R.drawable.extras,
-                R.drawable.postres,
-                R.drawable.bebidas};
-
-        ArrayList<Category> arrayOfCategories = new ArrayList<Category>();
-        arrayOfCategories.add(new Category(1, "Ensaladas y entradas", covers[0]));
-        arrayOfCategories.add(new Category(2, "Sopas", covers[1]));
-        arrayOfCategories.add(new Category(3, "Barra Sushi", covers[2]));
-        arrayOfCategories.add(new Category(4, "Combos", covers[3]));
-        arrayOfCategories.add(new Category(5, "Cocina Caliente", covers[4]));
-        arrayOfCategories.add(new Category(6, "Extras", covers[5]));
-        arrayOfCategories.add(new Category(7, "Postres", covers[6]));
-        arrayOfCategories.add(new Category(8, "Bebidas", covers[7]));
-        adapter = new CategoryAdapter(getActivity(), arrayOfCategories);
+//        int[] covers = new int[]{
+//                R.drawable.ensaldas_entradas,
+//                R.drawable.sopas,
+//                R.drawable.sushi,
+//                R.drawable.combos,
+//                R.drawable.cocina_caliente,
+//                R.drawable.extras,
+//                R.drawable.postres,
+//                R.drawable.bebidas};
+//
+//        ArrayList<Category> arrayOfCategories = new ArrayList<Category>();
+//        arrayOfCategories.add(new Category(1, "Ensaladas y entradas", covers[0]));
+//        arrayOfCategories.add(new Category(2, "Sopas", covers[1]));
+//        arrayOfCategories.add(new Category(3, "Barra Sushi", covers[2]));
+//        arrayOfCategories.add(new Category(4, "Combos", covers[3]));
+//        arrayOfCategories.add(new Category(5, "Cocina Caliente", covers[4]));
+//        arrayOfCategories.add(new Category(6, "Extras", covers[5]));
+//        arrayOfCategories.add(new Category(7, "Postres", covers[6]));
+//        arrayOfCategories.add(new Category(8, "Bebidas", covers[7]));
+        mDbHelper = new MrSushiDbHelper(getActivity());
+        adapter = new CategoryAdapter(getActivity(), mDbHelper.getAllCategories());
         setHasOptionsMenu(true);
 
     }
@@ -130,6 +132,7 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
     }
 
     @Override

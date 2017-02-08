@@ -9,6 +9,8 @@ import java.util.List;
  */
 
 public class Product {
+
+    private int id;
     private String name;
     private String description;
     private double originalPrice;
@@ -23,6 +25,22 @@ public class Product {
         this.name = name;
         this.originalPrice = originalPrice;
         this.thumbnail = thumbnail;
+    }
+
+    public Product(int id, String name, int originalPrice, int thumbnail, Category category) {
+        this.id = id;
+        this.name = name;
+        this.originalPrice = originalPrice;
+        this.thumbnail = thumbnail;
+        this.category = category;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

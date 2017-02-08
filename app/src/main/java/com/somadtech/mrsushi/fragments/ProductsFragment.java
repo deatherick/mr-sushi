@@ -26,6 +26,7 @@ import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.AlbumsAdapter;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +37,7 @@ public class ProductsFragment extends Fragment {
     private AlbumsAdapter adapter;
     private List<Product> productList;
     FragmentActivity listener;
+    MrSushiDbHelper mDbHelper;
 
     @Override
     public void onAttach(Context context) {
@@ -90,18 +92,25 @@ public class ProductsFragment extends Fragment {
 
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
 
-        productList = new ArrayList<>();
+        mDbHelper = new MrSushiDbHelper(getActivity());
+        productList = mDbHelper.getAllProducts();// new ArrayList<>();
         adapter = new AlbumsAdapter(getActivity(), productList);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 3
+        int CARD_VIEW_COLUMNS;
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize) {
+            CARD_VIEW_COLUMNS = 3;
+        } else {
+            CARD_VIEW_COLUMNS = 2;
+        }
 
-        );
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), CARD_VIEW_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(10), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(CARD_VIEW_COLUMNS, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        prepareAlbums();
+        //prepareAlbums();
 
         return layout;
     }
