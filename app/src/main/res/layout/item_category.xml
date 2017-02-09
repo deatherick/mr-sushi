@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/category_list_row">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/category_list_row" >
+
+    <ImageView
+        android:id="@+id/imageViewCat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignBottom="@+id/txtCatName"
+        android:layout_alignLeft="@+id/txtCatName"
+        android:layout_alignRight="@+id/txtCatName"
+        android:layout_alignTop="@+id/txtCatName"
+        android:scaleType="fitXY"
+        android:src="@android:drawable/btn_star_big_on" />
 
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/txtCatName"
-        android:layout_weight="1"
         android:textColor="@android:color/background_light"
         android:gravity="center_vertical|center_horizontal"
-        android:textSize="30sp"
-        android:background="@android:drawable/btn_star_big_on" />
-
-</LinearLayout>
+        android:textSize="30sp" />
+</RelativeLayout>

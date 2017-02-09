@@ -1,7 +1,5 @@
 package com.somadtech.mrsushi;
 
-import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -28,7 +26,6 @@ import com.google.gson.Gson;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
-import com.somadtech.mrsushi.schemes.CategoryContract;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 public class MainActivity extends AppCompatActivity
@@ -60,18 +57,7 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            // Create a new Fragment to be placed in the activity layout
-            CategoriesFragment firstFragment = new CategoriesFragment();
-
-            // In case this activity was started with special instructions from an
-            // Intent, pass the Intent's extras to the fragment as arguments
-            firstFragment.setArguments(getIntent().getExtras());
-
-            // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.fragment_container, firstFragment)
-                    .commit();
+            openCategoryList();
         }
 
 
@@ -100,78 +86,79 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         Log.i("MainActivity", response);
-                        int[] covers = new int[]{
-                                R.drawable.ensaldas_entradas,
-                                R.drawable.sopas,
-                                R.drawable.sushi,
-                                R.drawable.combos,
-                                R.drawable.cocina_caliente,
-                                R.drawable.extras,
-                                R.drawable.postres,
-                                R.drawable.bebidas};
+                        String[] covers = new String[]{
+                                "http://www.underconsideration.com/brandnew/archives/google_2015_logo_detail.png"};
+//                                R.drawable.sopas,
+//                                R.drawable.sushi,
+//                                R.drawable.combos,
+//                                R.drawable.cocina_caliente,
+//                                R.drawable.extras,
+//                                R.drawable.postres,
+//                                R.drawable.bebidas};
 
                         // Do something with the response
 
 
                         // Insert the new row, returning the primary key value of the new row
                         long newRowId = mDbHelper.createCategory(new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createCategory(new Category(2, "Sopas", covers[1]));
-                        mDbHelper.createCategory(new Category(3, "Barra Sushi", covers[2]));
-                        mDbHelper.createCategory(new Category(4, "Combos", covers[3]));
-                        mDbHelper.createCategory(new Category(5, "Cocina Caliente", covers[4]));
-                        mDbHelper.createCategory(new Category(6, "Extras", covers[5]));
-                        mDbHelper.createCategory(new Category(7, "Postres", covers[6]));
-                        mDbHelper.createCategory(new Category(8, "Bebidas", covers[7]));
+                        mDbHelper.createCategory(new Category(2, "Sopas", covers[0]));
+                        mDbHelper.createCategory(new Category(3, "Barra Sushi", covers[0]));
+                        mDbHelper.createCategory(new Category(4, "Combos", covers[0]));
+                        mDbHelper.createCategory(new Category(5, "Cocina Caliente", covers[0]));
+                        mDbHelper.createCategory(new Category(6, "Extras", covers[0]));
+                        mDbHelper.createCategory(new Category(7, "Postres", covers[0]));
+                        mDbHelper.createCategory(new Category(8, "Bebidas", covers[0]));
                         Log.i("Row insercion", String.valueOf(newRowId));
 
 
-                        int[] product_covers = new int[]{
-                                R.drawable.image1,
-                                R.drawable.image2,
-                                R.drawable.image3,
-                                R.drawable.image4,
-                                R.drawable.image5,
-                                R.drawable.image1,
-                                R.drawable.image2,
-                                R.drawable.image3,
-                                R.drawable.image4,
-                                R.drawable.image5,
-                                R.drawable.image1};
+                        String[] product_covers = new String[]{
+                                "https://s3-media4.fl.yelpcdn.com/bphoto/4fWgAz_uHWfhvB0OiS4OVA/348s.jpg"};
+//                                R.drawable.image2,
+//                                R.drawable.image3,
+//                                R.drawable.image4,
+//                                R.drawable.image5,
+//                                R.drawable.image1,
+//                                R.drawable.image2,
+//                                R.drawable.image3,
+//                                R.drawable.image4,
+//                                R.drawable.image5,
+//                                R.drawable.image1};
 
                         Product a = new Product(1, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(2, "Manchego Maki", 52, product_covers[1], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(2, "Manchego Maki", 52, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(3, "Kani Roll", 58, product_covers[2], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(3, "Kani Roll", 58, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(4, "Lotto Roll", 65, product_covers[3], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(4, "Lotto Roll", 65, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(5, "Meshi Ebi Maki", 74, product_covers[4], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(5, "Meshi Ebi Maki", 74, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(6, "Calamares Tempura", 45, product_covers[5], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(6, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(7, "Manchego Maki", 52, product_covers[6], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(7, "Manchego Maki", 52, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(8, "Kani Roll", 58, product_covers[7], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(8, "Kani Roll", 58, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(9, "Lotto Roll", 65, product_covers[8], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(9, "Lotto Roll", 65, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
-                        a = new Product(10, "Meshi Ebi Maki", 74, product_covers[9], new Category(1, "Ensaladas y entradas", covers[0]));
+                        a = new Product(10, "Meshi Ebi Maki", 74, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
                         Gson gson = new Gson();
                         String json = gson.toJson(mDbHelper.getProduct(1));
 
                         Log.i("producto 1: ", json);
+                        openCategoryList();
                     }
                 },
                 new Response.ErrorListener() {
@@ -230,6 +217,25 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void openCategoryList(){
+        // Check that the activity is using the layout version with
+        // the fragment_container FrameLayout
+        if (findViewById(R.id.fragment_categories) == null) {
+            // Create a new Fragment to be placed in the activity layout
+            CategoriesFragment firstFragment = new CategoriesFragment();
+
+            // In case this activity was started with special instructions from an
+            // Intent, pass the Intent's extras to the fragment as arguments
+            firstFragment.setArguments(getIntent().getExtras());
+
+            // Add the fragment to the 'fragment_container' FrameLayout
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, firstFragment)
+                    .commit();
+        }
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -237,22 +243,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_new) {
-            // Check that the activity is using the layout version with
-            // the fragment_container FrameLayout
-            if (findViewById(R.id.fragment_categories) == null) {
-                // Create a new Fragment to be placed in the activity layout
-                CategoriesFragment firstFragment = new CategoriesFragment();
-
-                // In case this activity was started with special instructions from an
-                // Intent, pass the Intent's extras to the fragment as arguments
-                firstFragment.setArguments(getIntent().getExtras());
-
-                // Add the fragment to the 'fragment_container' FrameLayout
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.fragment_container, firstFragment)
-                        .commit();
-            }
+            openCategoryList();
 
             // Handle the camera action
         }

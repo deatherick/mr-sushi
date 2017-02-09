@@ -24,8 +24,6 @@ import com.somadtech.mrsushi.adapters.CategoryAdapter;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
-import java.util.ArrayList;
-
 /**
  * Created by smt on 28/01/17.
  * Project Name: Mrsushi
@@ -53,28 +51,6 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        //((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        // Construct the data source
-//        int[] covers = new int[]{
-//                R.drawable.ensaldas_entradas,
-//                R.drawable.sopas,
-//                R.drawable.sushi,
-//                R.drawable.combos,
-//                R.drawable.cocina_caliente,
-//                R.drawable.extras,
-//                R.drawable.postres,
-//                R.drawable.bebidas};
-//
-//        ArrayList<Category> arrayOfCategories = new ArrayList<Category>();
-//        arrayOfCategories.add(new Category(1, "Ensaladas y entradas", covers[0]));
-//        arrayOfCategories.add(new Category(2, "Sopas", covers[1]));
-//        arrayOfCategories.add(new Category(3, "Barra Sushi", covers[2]));
-//        arrayOfCategories.add(new Category(4, "Combos", covers[3]));
-//        arrayOfCategories.add(new Category(5, "Cocina Caliente", covers[4]));
-//        arrayOfCategories.add(new Category(6, "Extras", covers[5]));
-//        arrayOfCategories.add(new Category(7, "Postres", covers[6]));
-//        arrayOfCategories.add(new Category(8, "Bebidas", covers[7]));
         mDbHelper = new MrSushiDbHelper(getActivity());
         adapter = new CategoryAdapter(getActivity(), mDbHelper.getAllCategories());
         setHasOptionsMenu(true);

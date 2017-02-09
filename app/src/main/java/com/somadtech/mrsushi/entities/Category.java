@@ -10,19 +10,19 @@ public class Category {
 
     private int itemId;
     private String itemName;
-    private int itemImage;
+    private String itemImage;
 
     // constructor
     public Category() {
 
     }
     // constructor
-    public Category(int itemId, String itemName, int itemImage) {
+    public Category(int itemId, String itemName, String itemImage) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemImage = itemImage;
     }
-    public int getItemImage(){
+    public String getItemImage(){
         return this.itemImage;
     }
 
@@ -42,7 +42,7 @@ public class Category {
         this.itemName = itemName;
     }
 
-    public void setItemImage(int itemImage) {
+    public void setItemImage(String itemImage) {
         this.itemImage = itemImage;
     }
 

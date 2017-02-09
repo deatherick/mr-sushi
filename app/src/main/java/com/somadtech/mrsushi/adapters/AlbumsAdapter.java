@@ -15,6 +15,7 @@ import android.widget.Toast;
 //import com.bumptech.glide.Glide;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,11 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
         Product product = productList.get(position);
         holder.title.setText(product.getName());
         holder.count.setText("Q" + product.getOriginalPrice());
-
+        Picasso.with(mContext)
+                .load(productList.get(position).getThumbnail())
+                .placeholder(R.drawable.image1)
+                .error(R.drawable.image1)
+                .into(holder.thumbnail);
         // loading product cover using Glide library
         //Glide.with(mContext).load(product.getThumbnail()).into(holder.thumbnail);
 

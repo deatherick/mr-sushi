@@ -14,20 +14,20 @@ public class Product {
     private String name;
     private String description;
     private double originalPrice;
-    private int thumbnail;
+    private String thumbnail;
     private List<Variant> variants;
     private Category category;
 
     public Product() {
     }
 
-    public Product(String name, int originalPrice, int thumbnail) {
+    public Product(String name, int originalPrice, String thumbnail) {
         this.name = name;
         this.originalPrice = originalPrice;
         this.thumbnail = thumbnail;
     }
 
-    public Product(int id, String name, int originalPrice, int thumbnail, Category category) {
+    public Product(int id, String name, int originalPrice, String thumbnail, Category category) {
         this.id = id;
         this.name = name;
         this.originalPrice = originalPrice;
@@ -70,11 +70,11 @@ public class Product {
         this.originalPrice = originalPrice;
     }
 
-    public int getThumbnail() {
+    public String getThumbnail() {
         return thumbnail;
     }
 
-    public void setThumbnail(int thumbnail) {
+    public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
 

@@ -11,7 +11,6 @@ import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by smt on 2/6/17.
@@ -81,7 +80,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     public Category getCategory(long category_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + CategoryContract.CategoryEntry.TABLE_NAME + " WHERE "
+        String selectQuery = "SELECT * FROM " + CategoryContract.CategoryEntry.TABLE_NAME + " WHERE "
                 + CategoryContract.CategoryEntry._ID + " = " + category_id;
 
         Log.e(LOG, selectQuery);
@@ -96,17 +95,17 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         Category cat = new Category();
         cat.setItemId(c.getInt(c.getColumnIndex(CategoryContract.CategoryEntry._ID)));
         cat.setItemName(c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_NAME)));
-        cat.setItemImage(Integer.parseInt(c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_IMAGE))));
+        cat.setItemImage(c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_IMAGE)));
 
         return cat;
     }
 
     /**
-     * @return List<Category>
+     * @return ArrayList<Category>
      */
     public ArrayList<Category> getAllCategories() {
         ArrayList<Category> categories = new ArrayList<Category>();
-        String selectQuery = "SELECT  * FROM " + CategoryContract.CategoryEntry.TABLE_NAME;
+        String selectQuery = "SELECT * FROM " + CategoryContract.CategoryEntry.TABLE_NAME;
 
         Log.e(LOG, selectQuery);
 
@@ -119,7 +118,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 Category cat = new Category();
                 cat.setItemId(c.getInt((c.getColumnIndex(CategoryContract.CategoryEntry._ID))));
                 cat.setItemName((c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_NAME))));
-                cat.setItemImage(Integer.parseInt(c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_IMAGE))));
+                cat.setItemImage(c.getString(c.getColumnIndex(CategoryContract.CategoryEntry.COLUMN_NAME_IMAGE)));
 
                 categories.add(cat);
             } while (c.moveToNext());
@@ -154,6 +153,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     }
 
 
+    /**
+     * @param product Product
+     * @return long
+     */
     public long createProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -176,12 +179,12 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
     /**
      * @param product_id long
-     * @return Category
+     * @return Product
      */
     public Product getProduct(long product_id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + ProductContract.ProductEntry.TABLE_NAME + " WHERE "
+        String selectQuery = "SELECT * FROM " + ProductContract.ProductEntry.TABLE_NAME + " WHERE "
                 + ProductContract.ProductEntry._ID + " = " + product_id;
 
         Log.e(LOG, selectQuery);
@@ -196,13 +199,16 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         prod.setId(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID)));
         prod.setName(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_NAME)));
         prod.setDescription(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_DESC)));
-        prod.setThumbnail(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
+        prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
         prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
         prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
 
         return prod;
     }
 
+    /**
+     * @return ArrayList<Product>
+     */
     public ArrayList<Product> getAllProducts() {
         ArrayList<Product> products = new ArrayList<Product>();
         String selectQuery = "SELECT  * FROM " + ProductContract.ProductEntry.TABLE_NAME;
@@ -219,7 +225,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 prod.setId(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID)));
                 prod.setName(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_NAME)));
                 prod.setDescription(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_DESC)));
-                prod.setThumbnail(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
+                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
                 prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
                 prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
 
@@ -230,6 +236,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    /**
+     * @param product Product
+     * @return int
+     */
     public int updateProduct(Product product) {
         SQLiteDatabase db = this.getWritableDatabase();
 

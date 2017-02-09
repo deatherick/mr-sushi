@@ -151,48 +151,48 @@ public class ProductsFragment extends Fragment {
      * Adding few albums for testing
      */
     private void prepareAlbums() {
-        int[] covers = new int[]{
-                R.drawable.image1,
-                R.drawable.image2,
-                R.drawable.image3,
-                R.drawable.image4,
-                R.drawable.image5,
-                R.drawable.image1,
-                R.drawable.image2,
-                R.drawable.image3,
-                R.drawable.image4,
-                R.drawable.image5,
-                R.drawable.image1};
-
-        Product a = new Product("Calamares Tempura", 45, covers[0]);
-        productList.add(a);
-
-        a = new Product("Manchego Maki", 52, covers[1]);
-        productList.add(a);
-
-        a = new Product("Kani Roll", 58, covers[2]);
-        productList.add(a);
-
-        a = new Product("Lotto Roll", 65, covers[3]);
-        productList.add(a);
-
-        a = new Product("Meshi Ebi Maki", 74, covers[4]);
-        productList.add(a);
-
-        a = new Product("Calamares Tempura", 45, covers[5]);
-        productList.add(a);
-
-        a = new Product("Manchego Maki", 52, covers[6]);
-        productList.add(a);
-
-        a = new Product("Kani Roll", 58, covers[7]);
-        productList.add(a);
-
-        a = new Product("Lotto Roll", 65, covers[8]);
-        productList.add(a);
-
-        a = new Product("Meshi Ebi Maki", 74, covers[9]);
-        productList.add(a);
+//        String[] covers = new String[]{
+//                R.drawable.image1,
+//                R.drawable.image2,
+//                R.drawable.image3,
+//                R.drawable.image4,
+//                R.drawable.image5,
+//                R.drawable.image1,
+//                R.drawable.image2,
+//                R.drawable.image3,
+//                R.drawable.image4,
+//                R.drawable.image5,
+//                R.drawable.image1};
+//
+//        Product a = new Product("Calamares Tempura", 45, covers[0]);
+//        productList.add(a);
+//
+//        a = new Product("Manchego Maki", 52, covers[1]);
+//        productList.add(a);
+//
+//        a = new Product("Kani Roll", 58, covers[2]);
+//        productList.add(a);
+//
+//        a = new Product("Lotto Roll", 65, covers[3]);
+//        productList.add(a);
+//
+//        a = new Product("Meshi Ebi Maki", 74, covers[4]);
+//        productList.add(a);
+//
+//        a = new Product("Calamares Tempura", 45, covers[5]);
+//        productList.add(a);
+//
+//        a = new Product("Manchego Maki", 52, covers[6]);
+//        productList.add(a);
+//
+//        a = new Product("Kani Roll", 58, covers[7]);
+//        productList.add(a);
+//
+//        a = new Product("Lotto Roll", 65, covers[8]);
+//        productList.add(a);
+//
+//        a = new Product("Meshi Ebi Maki", 74, covers[9]);
+//        productList.add(a);
 
         adapter.notifyDataSetChanged();
     }

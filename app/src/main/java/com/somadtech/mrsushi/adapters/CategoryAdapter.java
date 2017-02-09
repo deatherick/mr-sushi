@@ -1,18 +1,24 @@
 package com.somadtech.mrsushi.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Category;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
+import static com.somadtech.mrsushi.R.id.imageViewCat;
 import static com.somadtech.mrsushi.R.id.txtCatName;
 
 /**
@@ -24,16 +30,18 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
     public ArrayList<Category> employeeArrayList;
     public ArrayList<Category> orig;
+    public Context myContext;
 
     public CategoryAdapter(Context context, ArrayList<Category> users) {
         super(context, 0, users);
         this.employeeArrayList = users;
+        this.myContext = context;
     }
 
     private class CategoryHolder
     {
         TextView name;
-        TextView age;
+        ImageView image;
     }
 
     @Override
@@ -61,6 +69,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_category, parent, false);
             holder = new CategoryHolder();
             holder.name = (TextView) convertView.findViewById(txtCatName);
+            holder.image = (ImageView) convertView.findViewById(imageViewCat);
             convertView.setTag(holder);
             //TextView txtCatName = (TextView) convertView.findViewById(txtCatName);
         } else {
@@ -68,7 +77,27 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
         }
         // Lookup view for data population
         holder.name.setText(employeeArrayList.get(position).getItemName());
-        holder.name.setBackgroundResource(employeeArrayList.get(position).getItemImage());
+        Picasso.with(myContext)
+                .load(employeeArrayList.get(position).getItemImage())
+                .placeholder(R.drawable.sopas)
+                .error(R.drawable.sopas)
+                .into(holder.image);
+//        private Target target = new Target() {
+//            @Override
+//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(Drawable errorDrawable) {
+//
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//            }
+//        };
+        //holder.image.setImageResource(employeeArrayList.get(position).getItemImage());
+        //holder.name.setBackgroundResource(employeeArrayList.get(position).getItemImage());
         // Populate the data into the template view using the data object
 
         // Return the completed view to render on screen
