@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.entities.Variant;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CategoryContract.SQL_CREATE_CATEGORIES);
         db.execSQL(ProductContract.SQL_CREATE_PRODUCTS);
+        db.execSQL(VariantContract.SQL_CREATE_VARIANTS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -38,6 +40,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         // to simply to discard the data and start over
         db.execSQL(CategoryContract.SQL_DELETE_CATEGORIES);
         db.execSQL(ProductContract.SQL_DELETE_PRODUCTS);
+        db.execSQL(VariantContract.SQL_DELETE_VARIANTS);
         onCreate(db);
     }
 
@@ -51,7 +54,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
             db.close();
     }
 
-
+    //region Categories
     /**
      * @param category Category
      * @return int
@@ -151,8 +154,9 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.delete(CategoryContract.CategoryEntry.TABLE_NAME, CategoryContract.CategoryEntry._ID + " = ?",
                 new String[] { String.valueOf(category_id) });
     }
+    //endregion
 
-
+    //region Products
     /**
      * @param product Product
      * @return long
@@ -202,6 +206,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
         prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
         prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
+        prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
 
         return prod;
     }
@@ -228,6 +233,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
                 prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
                 prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
+                prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
 
                 products.add(prod);
             } while (c.moveToNext());
@@ -254,4 +260,130 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return db.update(ProductContract.ProductEntry.TABLE_NAME, values, ProductContract.ProductEntry._ID + " = ?",
                 new String[] { String.valueOf(product.getId()) });
     }
+    //endregion
+
+    //region Variants
+    /**
+     * @param variant Variant
+     * @return long
+     */
+    public long createVariant(Variant variant) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(VariantContract.VariantEntry._ID, variant.getId());
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_NAME, variant.getName());
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_PRICE, variant.getPrice());
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_PR_ID, variant.getProduct_id());
+
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(VariantContract.VariantEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updateVariant(variant);
+        }
+        return id;
+    }
+
+    /**
+     * @param variant Variant
+     * @return int
+     */
+    public int updateVariant(Variant variant) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_NAME, variant.getName());
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_PRICE, variant.getPrice());
+        values.put(VariantContract.VariantEntry.COLUMN_NAME_PR_ID, variant.getProduct_id());
+
+        // updating row
+        return db.update(VariantContract.VariantEntry.TABLE_NAME, values, VariantContract.VariantEntry._ID + " = ?",
+                new String[] { String.valueOf(variant.getId()) });
+    }
+
+    /**
+     * @return ArrayList<Variant>
+     */
+    public ArrayList<Variant> getAllVariants() {
+        ArrayList<Variant> variants = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + VariantContract.VariantEntry.TABLE_NAME;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Variant variant = new Variant();
+                variant.setId(c.getInt((c.getColumnIndex(VariantContract.VariantEntry._ID))));
+                variant.setName(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_NAME)));
+                variant.setPrice(Double.parseDouble(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PRICE))));
+                variant.setProduct_id(c.getInt(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PR_ID)));
+
+                variants.add(variant);
+            } while (c.moveToNext());
+        }
+
+        return variants;
+    }
+
+    /**
+     * @return ArrayList<Variant>
+     */
+    public ArrayList<Variant> getVariantsByProduct(long product_id) {
+        ArrayList<Variant> variants = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + VariantContract.VariantEntry.TABLE_NAME + " WHERE "
+                + VariantContract.VariantEntry.COLUMN_NAME_PR_ID + " = " + product_id;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Variant variant = new Variant();
+                variant.setId(c.getInt((c.getColumnIndex(VariantContract.VariantEntry._ID))));
+                variant.setName(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_NAME)));
+                variant.setPrice(Double.parseDouble(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PRICE))));
+                variant.setProduct_id(c.getInt(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PR_ID)));
+
+                variants.add(variant);
+            } while (c.moveToNext());
+        }
+
+        return variants;
+    }
+
+    /**
+     * @param variant_id long
+     * @return Variant
+     */
+    public Variant getVariant(long variant_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + VariantContract.VariantEntry.TABLE_NAME + " WHERE "
+                + VariantContract.VariantEntry._ID + " = " + variant_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null){
+            c.moveToFirst();
+        }
+
+        Variant variant = new Variant();
+        variant.setId(c.getInt((c.getColumnIndex(VariantContract.VariantEntry._ID))));
+        variant.setName(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_NAME)));
+        variant.setPrice(Double.parseDouble(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PRICE))));
+        variant.setProduct_id(c.getInt(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PR_ID)));
+
+        return variant;
+    }
+    //endregion
 }

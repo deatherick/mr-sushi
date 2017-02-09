@@ -22,11 +22,19 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         // Start the queue
         mRequestQueue.start();
 
-        String url ="http://www.tedimedia.com/backoffice/api.locations.php";
+        String url ="http://192.168.0.30:3000/db";
 
         // Create a new map of values, where column names are the keys
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -86,6 +94,17 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onResponse(String response) {
                         Log.i("MainActivity", response);
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            JavaType type = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, Product.class);
+                            ArrayList<Product> products = objectMapper.readValue(obj.getJSONArray("Products").toString(), type);
+                            for (Product product: products) {
+                                mDbHelper.createProduct(product);
+                            }
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
                         String[] covers = new String[]{
                                 "http://www.underconsideration.com/brandnew/archives/google_2015_logo_detail.png"};
 //                                R.drawable.sopas,
@@ -124,7 +143,7 @@ public class MainActivity extends AppCompatActivity
 //                                R.drawable.image5,
 //                                R.drawable.image1};
 
-                        Product a = new Product(1, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
+                  /*      Product a = new Product(1, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
                         mDbHelper.createProduct(a);
 
                         a = new Product(2, "Manchego Maki", 52, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
@@ -152,23 +171,24 @@ public class MainActivity extends AppCompatActivity
                         mDbHelper.createProduct(a);
 
                         a = new Product(10, "Meshi Ebi Maki", 74, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
+                        mDbHelper.createProduct(a);*/
 
                         Gson gson = new Gson();
                         String json = gson.toJson(mDbHelper.getProduct(1));
 
                         Log.i("producto 1: ", json);
-                        openCategoryList();
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle error
+                        Log.i("Error: ", error.getMessage());
                     }
                 });
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
-
+        openCategoryList();
 
     }
 

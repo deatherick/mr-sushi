@@ -1,6 +1,9 @@
 package com.somadtech.mrsushi.entities;
 
 import android.annotation.SuppressLint;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 /**
@@ -8,6 +11,7 @@ import java.util.List;
  * Project Name: Mrsushi
  */
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 
     private int id;
