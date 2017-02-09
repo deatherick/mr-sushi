@@ -1,14 +1,27 @@
 package com.somadtech.mrsushi.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,13 +38,14 @@ import java.util.List;
  * Project Name: Mrsushi
  */
 
-public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHolder> {
+public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyViewHolder> {
     private Context mContext;
     private List<Product> productList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
         public ImageView thumbnail, overflow;
+        public Button button_product_detail;
 
         public MyViewHolder(View view) {
             super(view);
@@ -39,11 +53,18 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
             count = (TextView) view.findViewById(R.id.count);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             overflow = (ImageView) view.findViewById(R.id.overflow);
+            button_product_detail = (Button) view.findViewById(R.id.button_product_detail);
+            button_product_detail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPopup(view);
+                }
+            });
         }
     }
 
 
-    public AlbumsAdapter(Context mContext, List<Product> productList) {
+    public ProductsAdapter(Context mContext, List<Product> productList) {
         this.mContext = mContext;
         this.productList = productList;
     }
@@ -121,6 +142,47 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.MyViewHold
         productList = new ArrayList<>();
         productList.addAll(countryModels);
         notifyDataSetChanged();
+    }
+
+    public void showPopup(View view) {
+        View popupView = LayoutInflater.from(mContext).inflate(R.layout.popup_product_detail, null);
+//        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
+//        int width = display.widthPixels;
+//        int height = display.heightPixels;
+
+
+
+        final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+//        Button btnDismiss = (Button) popupView.findViewById(R.id.listen_button);
+//        btnDismiss.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                popupWindow.dismiss();
+//            }
+//        });
+//        TypedValue tv = new TypedValue();
+//        int actionBarHeight = 0;
+//        if (mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
+//        {
+//            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,mContext.getResources().getDisplayMetrics());
+//        }
+//        popupWindow.setOutsideTouchable(true);
+//        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+//        popupWindow.setWidth(width-64);
+        //popupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+
+//        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+//                    popupWindow.dismiss();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+        popupWindow.showAsDropDown(popupView, 0, 0);
+//        RelativeLayout rl = (RelativeLayout)popupView.findViewById(R.id.relative_layout);
+//        rl.setAlpha(0.5F);
     }
 
 }

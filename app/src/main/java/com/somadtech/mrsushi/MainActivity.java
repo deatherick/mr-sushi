@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         // Start the queue
         mRequestQueue.start();
 
-        String url ="http://192.168.0.30:3000/db";
+        String url ="http://192.168.1.145:3000/db";
 
         // Create a new map of values, where column names are the keys
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity
                             e.printStackTrace();
                         }
                         String[] covers = new String[]{
-                                "http://www.underconsideration.com/brandnew/archives/google_2015_logo_detail.png"};
+                                "http://logok.org/wp-content/uploads/2014/04/Apple-Logo-black.png"};
 //                                R.drawable.sopas,
 //                                R.drawable.sushi,
 //                                R.drawable.combos,
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle error
-                        Log.i("Error: ", error.getMessage());
+                        Log.e("Error: ", error.getMessage());
                     }
                 });
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);

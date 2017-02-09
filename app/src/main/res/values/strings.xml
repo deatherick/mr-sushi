@@ -11,4 +11,6 @@
     <string name="action_play_next">Play Next</string>
     <string name="backdrop_title">LOVE MUSIC</string>
     <string name="backdrop_subtitle">This season top 20 albums</string>
+    <string name="category_toolbar">Categorías</string>
+    <string name="products_toolbar">Productos</string>
 </resources>

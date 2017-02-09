@@ -7,16 +7,6 @@
     android:background="@color/colorAccent"
     android:id="@+id/fragment_products">
 
-    <TextView
-        android:text="Productos"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textSize="25sp"
-        android:textColor="@android:color/background_dark"
-        android:background="@color/viewBg"
-        android:elevation="20dp" />
-
     <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_content"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Define the values for the attribute -->
+    <attr name="typeface" format="enum">
+        <enum name="montserrat" value="0"/>
+        <enum name="montserratLight" value="1"/>
+    </attr>
+
+    <!-- Tell Android that the class "CustomFont" can be styled,
+         and which attributes it supports -->
+    <declare-styleable name="CustomFont">
+        <attr name="typeface"/>
+    </declare-styleable>
+</resources>

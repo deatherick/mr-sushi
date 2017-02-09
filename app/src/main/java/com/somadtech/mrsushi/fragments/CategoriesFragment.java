@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,6 +84,10 @@ public class CategoriesFragment extends Fragment {
                 //Intent intent = new Intent(getActivity(), ProductsFragment.class);
                 //startActivity(intent);
                 ProductsFragment fragment2 = new ProductsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putInt("category_id", value.getItemId());
+                fragment2.setArguments(bundle);
+
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction =        fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment2);
@@ -116,6 +121,8 @@ public class CategoriesFragment extends Fragment {
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchMenuItem.setVisible(true);
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.category_toolbar);
     }
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {

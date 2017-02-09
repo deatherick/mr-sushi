@@ -3,6 +3,7 @@ package com.somadtech.mrsushi.entities;
 import android.annotation.SuppressLint;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -64,20 +65,24 @@ public class Product {
     }
 
     @SuppressLint("DefaultLocale")
+    @JsonProperty("price")
     public String getOriginalPrice() {
         //DecimalFormat df2 = new DecimalFormat(".##");
         return String.format("%.2f", originalPrice);
         //return df2.format(originalPrice);
     }
 
+    @JsonProperty("price")
     public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
+    @JsonProperty("image")
     public String getThumbnail() {
         return thumbnail;
     }
 
+    @JsonProperty("image")
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }

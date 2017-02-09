@@ -14,6 +14,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +25,8 @@ import android.view.ViewGroup;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
-import com.somadtech.mrsushi.adapters.AlbumsAdapter;
+import com.somadtech.mrsushi.adapters.ProductsAdapter;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
@@ -34,7 +36,7 @@ import java.util.List;
 public class ProductsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private AlbumsAdapter adapter;
+    private ProductsAdapter adapter;
     private List<Product> productList;
     FragmentActivity listener;
     MrSushiDbHelper mDbHelper;
@@ -56,7 +58,9 @@ public class ProductsFragment extends Fragment {
         setHasOptionsMenu(true);
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
         upArrow.setColorFilter(getResources().getColor(R.color.cardview_light_background), PorterDuff.Mode.SRC_ATOP);
+        //getActivity().getActionBar().setTitle("Hello world App");
 
+        //getActivity().getSupportActionBar().setTitle("Hello world App");
       /*  Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setNavigationIcon(upArrow);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -93,8 +97,15 @@ public class ProductsFragment extends Fragment {
         recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
 
         mDbHelper = new MrSushiDbHelper(getActivity());
-        productList = mDbHelper.getAllProducts();// new ArrayList<>();
-        adapter = new AlbumsAdapter(getActivity(), productList);
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            int category_id = bundle.getInt("category_id", 1);
+            productList = mDbHelper.getProductsByCategory(category_id);// new ArrayList<>();
+        } else {
+            productList = mDbHelper.getAllProducts();// new ArrayList<>();
+        }
+
+        adapter = new ProductsAdapter(getActivity(), productList);
 
         int CARD_VIEW_COLUMNS;
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
@@ -248,6 +259,17 @@ public class ProductsFragment extends Fragment {
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchMenuItem.setVisible(true);
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        Bundle bundle = this.getArguments();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        if (bundle != null) {
+            int category_id = bundle.getInt("category_id", 1);
+            Category category = mDbHelper.getCategory(category_id);
+            toolbar.setTitle(category.getItemName());
+        } else {
+
+            toolbar.setTitle(R.string.products_toolbar);
+        }
+
     }
 
     @Override

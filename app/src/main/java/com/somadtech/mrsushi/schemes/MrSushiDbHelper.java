@@ -243,6 +243,38 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * @return ArrayList<Product>
+     */
+    public ArrayList<Product> getProductsByCategory(long category_id) {
+        ArrayList<Product> products = new ArrayList<Product>();
+        String selectQuery = "SELECT  * FROM " + ProductContract.ProductEntry.TABLE_NAME+ " WHERE "
+                + ProductContract.ProductEntry.COLUMN_NAME_CAT + " = " + category_id;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Product prod = new Product();
+                prod.setId(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID)));
+                prod.setName(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_NAME)));
+                prod.setDescription(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_DESC)));
+                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
+                prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
+                prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
+                prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
+
+                products.add(prod);
+            } while (c.moveToNext());
+        }
+
+        return products;
+    }
+
+    /**
      * @param product Product
      * @return int
      */
