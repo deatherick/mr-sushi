@@ -21,10 +21,11 @@
         android:textSize="18dp"/>
 
     <ImageView
-        android:id="@+id/employee_image"
+        android:id="@+id/product_image"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:layout_marginTop="4dp"
+        android:scaleType="fitXY"
         android:gravity="center_horizontal"
         android:layout_below="@id/employee_card_title"
         android:layout_marginLeft="16dp"
@@ -36,10 +37,11 @@
         android:id="@+id/card_name_text_layout_id"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/employee_image"
+        android:layout_below="@+id/product_image"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
         <TextView
+            android:id="@+id/txtName"
             android:layout_width="0dp"
             android:layout_weight="0.4"
             android:layout_height="wrap_content"
@@ -59,6 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/card_name_text_layout_id">
         <TextView
+            android:id="@+id/txtDescription"
             android:layout_width="0dp"
             android:layout_weight="0.4"
             android:layout_height="wrap_content"

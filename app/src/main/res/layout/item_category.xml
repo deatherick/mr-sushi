@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/category_list_row" >
+    android:layout_height="@dimen/category_list_row"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/imageViewCat"
@@ -15,8 +15,9 @@
         android:scaleType="fitXY"
         android:src="@android:drawable/btn_star_big_on" />
 
-    <TextView
+    <com.somadtech.mrsushi.font.MontserratTextView
         android:text="TextView"
+        custom:typeface="montserratLight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/txtCatName"

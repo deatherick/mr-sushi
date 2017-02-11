@@ -1,4 +1,4 @@
-package com.somadtech.mrsushi;
+package com.somadtech.mrsushi.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.view.View.OnClickListener;
+
+import com.somadtech.mrsushi.MainActivity;
+import com.somadtech.mrsushi.R;
 
 public class SplashActivity extends AppCompatActivity {
 

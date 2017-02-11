@@ -4,6 +4,7 @@
     <attr name="typeface" format="enum">
         <enum name="montserrat" value="0"/>
         <enum name="montserratLight" value="1"/>
+        <enum name="montserratSemiBold" value="2"/>
     </attr>
 
     <!-- Tell Android that the class "CustomFont" can be styled,

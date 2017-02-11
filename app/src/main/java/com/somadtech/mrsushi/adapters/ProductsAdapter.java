@@ -1,6 +1,7 @@
 package com.somadtech.mrsushi.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 //import com.bumptech.glide.Glide;
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.activities.ProductDetailActivity;
 import com.somadtech.mrsushi.entities.Product;
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +48,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         public TextView title, count;
         public ImageView thumbnail, overflow;
         public Button button_product_detail;
+        public Product product;
 
         public MyViewHolder(View view) {
             super(view);
@@ -57,7 +60,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             button_product_detail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showPopup(view);
+                    Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.putExtra("product_id", product.getId());
+                    mContext.startActivity(intent);
+                    //showPopup(view, product);
                 }
             });
         }
@@ -82,6 +89,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         Product product = productList.get(position);
         holder.title.setText(product.getName());
         holder.count.setText("Q" + product.getOriginalPrice());
+        holder.product = product;
         Picasso.with(mContext)
                 .load(productList.get(position).getThumbnail())
                 .placeholder(R.drawable.image1)
@@ -144,8 +152,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         notifyDataSetChanged();
     }
 
-    public void showPopup(View view) {
+
+    public void showPopup(View view, Product product) {
         View popupView = LayoutInflater.from(mContext).inflate(R.layout.popup_product_detail, null);
+
 //        DisplayMetrics display = mContext.getResources().getDisplayMetrics();
 //        int width = display.widthPixels;
 //        int height = display.heightPixels;
@@ -153,13 +163,20 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
 
         final PopupWindow popupWindow = new PopupWindow(popupView, WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-//        Button btnDismiss = (Button) popupView.findViewById(R.id.listen_button);
-//        btnDismiss.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                popupWindow.dismiss();
-//            }
-//        });
+        Button btnDismiss = (Button) popupView.findViewById(R.id.listen_button);
+        TextView txtName = (TextView) popupView.findViewById(R.id.txtName);
+        TextView txtDesc = (TextView) popupView.findViewById(R.id.txtDescription);
+
+        txtName.setText(product.getName());
+        txtDesc.setText(product.getDescription());
+        btnDismiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.setOutsideTouchable(true);
+        popupWindow.setFocusable(true);
 //        TypedValue tv = new TypedValue();
 //        int actionBarHeight = 0;
 //        if (mContext.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
