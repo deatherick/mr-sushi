@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Variant;
@@ -33,6 +34,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(CategoryContract.SQL_CREATE_CATEGORIES);
         db.execSQL(ProductContract.SQL_CREATE_PRODUCTS);
         db.execSQL(VariantContract.SQL_CREATE_VARIANTS);
+        db.execSQL(CartContract.SQL_CREATE_CART);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -41,6 +43,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(CategoryContract.SQL_DELETE_CATEGORIES);
         db.execSQL(ProductContract.SQL_DELETE_PRODUCTS);
         db.execSQL(VariantContract.SQL_DELETE_VARIANTS);
+        db.execSQL(CartContract.SQL_DELETE_CART);
         onCreate(db);
     }
 
@@ -405,8 +408,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null){
+        if (c != null  && c.getCount() > 0){
             c.moveToFirst();
+        } else {
+            return new Variant();
         }
 
         Variant variant = new Variant();
@@ -416,6 +421,182 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         variant.setProduct_id(c.getInt(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_PR_ID)));
 
         return variant;
+    }
+    //endregion
+
+    //region Cart
+    /**
+     * @param cart Cart
+     * @return int
+     */
+    public long createCart(Cart cart) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Product product = cart.getProduct();
+        Variant variant = cart.getVariant();
+
+        ContentValues values = new ContentValues();
+        values.put(CartContract.CartEntry.COLUMN_NAME_PRODUCT, product.getId());
+        values.put(CartContract.CartEntry.COLUMN_NAME_VARIANT, variant.getId());
+        values.put(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS, cart.getObservations());
+        values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
+        values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
+        values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
+
+        // insert row
+        int id;
+        if(cart.getObservations().equals("")){
+            Cart productInCart = checkProductInCart(product.getId());
+            if(productInCart != null){
+                id = addProductToCart(productInCart.getId());
+            } else {
+                id = (int) db.insertWithOnConflict(CartContract.CartEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            }
+        } else {
+            id = (int) db.insertWithOnConflict(CartContract.CartEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+        return id;
+    }
+
+    public int addProductToCart(long cart_id){
+        Cart cart = getCart(cart_id);
+        cart.setQuantity(cart.getQuantity() + 1);
+        return updateCart(cart);
+    }
+
+    public int removeProductOfCart(long cart_id){
+        Cart cart = getCart(cart_id);
+        cart.setQuantity(cart.getQuantity() - 1);
+        return updateCart(cart);
+    }
+
+    private Cart checkProductInCart(long product_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
+                + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + product_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return null;
+        }
+
+        Cart cart = new Cart();
+        cart.setId(c.getInt(c.getColumnIndex(CartContract.CartEntry._ID)));
+        cart.setProduct(getProduct(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PRODUCT))));
+        cart.setVariant(getVariant(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_VARIANT))));
+        cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
+        cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
+        cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+        cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
+
+        return cart;
+    }
+
+
+
+    /**
+     * @param cart_id long
+     * @return Cart
+     */
+    public Cart getCart(long cart_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
+                + CartContract.CartEntry._ID + " = " + cart_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null){
+            c.moveToFirst();
+        }
+
+
+        Cart cart = new Cart();
+        cart.setId(c.getInt(c.getColumnIndex(CartContract.CartEntry._ID)));
+        cart.setProduct(getProduct(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PRODUCT))));
+        cart.setVariant(getVariant(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_VARIANT))));
+        cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
+        cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
+        cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+        cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
+
+        return cart;
+    }
+
+    /**
+     * @return ArrayList<Cart>
+     */
+    public ArrayList<Cart> getAllCart() {
+        ArrayList<Cart> carts = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Cart cart = new Cart();
+                cart.setId(c.getInt(c.getColumnIndex(CartContract.CartEntry._ID)));
+                cart.setProduct(getProduct(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PRODUCT))));
+                cart.setVariant(getVariant(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_VARIANT))));
+                cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
+                cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
+                cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+                cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
+
+                carts.add(cart);
+            } while (c.moveToNext());
+        }
+
+        return carts;
+    }
+
+    /**
+     * @param cart Cart
+     * @return int
+     */
+    public int updateCart(Cart cart) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Product product = cart.getProduct();
+        Variant variant = cart.getVariant();
+
+        ContentValues values = new ContentValues();
+        values.put(CartContract.CartEntry.COLUMN_NAME_PRODUCT, product.getId());
+        values.put(CartContract.CartEntry.COLUMN_NAME_VARIANT, variant.getId());
+        values.put(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS, cart.getObservations());
+        values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
+        values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
+        values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
+
+        // updating row
+        return db.update(CartContract.CartEntry.TABLE_NAME, values, CartContract.CartEntry._ID + " = ?",
+                new String[] { String.valueOf(cart.getId()) });
+    }
+
+    /**
+     * @param cart_id long
+     */
+    public void deleteCart(long cart_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(CartContract.CartEntry.TABLE_NAME, CartContract.CartEntry._ID + " = ?",
+                new String[] { String.valueOf(cart_id) });
+    }
+
+    public void emptyCart(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+ CartContract.CartEntry.TABLE_NAME);
     }
     //endregion
 }

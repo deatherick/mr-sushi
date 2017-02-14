@@ -159,14 +159,14 @@ public class CategoriesFragment extends Fragment {
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setItemsVisibility(menu, item, false);
+                //setItemsVisibility(menu, item, false);
             }
         });
         // Detect SearchView close
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                setItemsVisibility(menu, item, true);
+                //setItemsVisibility(menu, item, true);
                 return false;
             }
         });

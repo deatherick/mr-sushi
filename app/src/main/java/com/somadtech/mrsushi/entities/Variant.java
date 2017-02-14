@@ -7,11 +7,17 @@ package com.somadtech.mrsushi.entities;
 
 public class Variant {
 
-
     private int id;
     private int product_id;
     private String name;
     private double price;
+
+    public Variant(){
+        this.id = 0;
+        this.product_id = 0;
+        this.name = "";
+        this.price = 0;
+    }
 
     public int getId() {
         return id;

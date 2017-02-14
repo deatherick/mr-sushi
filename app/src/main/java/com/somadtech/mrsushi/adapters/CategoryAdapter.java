@@ -1,8 +1,6 @@
 package com.somadtech.mrsushi.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Category;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
 
@@ -28,13 +25,13 @@ import static com.somadtech.mrsushi.R.id.txtCatName;
 
 public class CategoryAdapter extends ArrayAdapter<Category> {
 
-    public ArrayList<Category> employeeArrayList;
+    public ArrayList<Category> categoryArrayList;
     public ArrayList<Category> orig;
     public Context myContext;
 
     public CategoryAdapter(Context context, ArrayList<Category> users) {
         super(context, 0, users);
-        this.employeeArrayList = users;
+        this.categoryArrayList = users;
         this.myContext = context;
     }
 
@@ -46,12 +43,12 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 
     @Override
     public int getCount() {
-        return employeeArrayList.size();
+        return categoryArrayList.size();
     }
 
     @Override
     public Category getItem(int position) {
-        return employeeArrayList.get(position);
+        return categoryArrayList.get(position);
     }
 
     @Override
@@ -76,9 +73,9 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             holder = (CategoryHolder) convertView.getTag();
         }
         // Lookup view for data population
-        holder.name.setText(employeeArrayList.get(position).getItemName());
+        holder.name.setText(categoryArrayList.get(position).getItemName());
         Picasso.with(myContext)
-                .load(employeeArrayList.get(position).getItemImage())
+                .load(categoryArrayList.get(position).getItemImage())
                 .placeholder(R.drawable.sopas)
                 .error(R.drawable.sopas)
                 .into(holder.image);
@@ -96,8 +93,8 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
 //            public void onPrepareLoad(Drawable placeHolderDrawable) {
 //            }
 //        };
-        //holder.image.setImageResource(employeeArrayList.get(position).getItemImage());
-        //holder.name.setBackgroundResource(employeeArrayList.get(position).getItemImage());
+        //holder.image.setImageResource(cartArrayList.get(position).getItemImage());
+        //holder.name.setBackgroundResource(cartArrayList.get(position).getItemImage());
         // Populate the data into the template view using the data object
 
         // Return the completed view to render on screen
@@ -113,7 +110,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
                 final FilterResults oReturn = new FilterResults();
                 final ArrayList<Category> results = new ArrayList<Category>();
                 if (orig == null)
-                    orig = employeeArrayList;
+                    orig = categoryArrayList;
                 if (constraint != null) {
                     if (orig != null && orig.size() > 0) {
                         for (final Category g : orig) {
@@ -130,7 +127,7 @@ public class CategoryAdapter extends ArrayAdapter<Category> {
             @Override
             protected void publishResults(CharSequence constraint,
                                           FilterResults results) {
-                employeeArrayList = (ArrayList<Category>) results.values;
+                categoryArrayList = (ArrayList<Category>) results.values;
                 notifyDataSetChanged();
             }
         };

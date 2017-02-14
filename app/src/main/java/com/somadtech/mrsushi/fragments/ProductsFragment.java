@@ -52,40 +52,9 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.fragment_products);
-
-        //initCollapsingToolbar();
         setHasOptionsMenu(true);
         final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
         upArrow.setColorFilter(getResources().getColor(R.color.cardview_light_background), PorterDuff.Mode.SRC_ATOP);
-        //getActivity().getActionBar().setTitle("Hello world App");
-
-        //getActivity().getSupportActionBar().setTitle("Hello world App");
-      /*  Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(upArrow);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //What to do on back clicked
-                try {
-                    FragmentManager fm = getFragmentManager();
-                    if (fm.getBackStackEntryCount() > 0) {
-                        Log.i("MainActivity", "popping backstack");
-                        fm.popBackStack();
-                    } else {
-                        Log.i("MainActivity", "nothing on backstack, calling super");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
-
-        try {
-            //Glide.with(this).load(R.drawable.cover).into((ImageView) findViewById(R.id.backdrop));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -124,88 +93,6 @@ public class ProductsFragment extends Fragment {
         //prepareAlbums();
 
         return layout;
-    }
-
-    /**
-     * Initializing collapsing toolbar
-     * Will show and hide the toolbar title on scroll
-     */
-    private void initCollapsingToolbar() {
-        /*final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle("adfsdfadfadafdsadsf");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
-        appBarLayout.setExpanded(true);
-
-        // hiding & showing the title when toolbar expanded & collapsed
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(getString(R.string.app_name));
-                    isShow = true;
-                } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });*/
-    }
-
-    /**
-     * Adding few albums for testing
-     */
-    private void prepareAlbums() {
-//        String[] covers = new String[]{
-//                R.drawable.image1,
-//                R.drawable.image2,
-//                R.drawable.image3,
-//                R.drawable.image4,
-//                R.drawable.image5,
-//                R.drawable.image1,
-//                R.drawable.image2,
-//                R.drawable.image3,
-//                R.drawable.image4,
-//                R.drawable.image5,
-//                R.drawable.image1};
-//
-//        Product a = new Product("Calamares Tempura", 45, covers[0]);
-//        productList.add(a);
-//
-//        a = new Product("Manchego Maki", 52, covers[1]);
-//        productList.add(a);
-//
-//        a = new Product("Kani Roll", 58, covers[2]);
-//        productList.add(a);
-//
-//        a = new Product("Lotto Roll", 65, covers[3]);
-//        productList.add(a);
-//
-//        a = new Product("Meshi Ebi Maki", 74, covers[4]);
-//        productList.add(a);
-//
-//        a = new Product("Calamares Tempura", 45, covers[5]);
-//        productList.add(a);
-//
-//        a = new Product("Manchego Maki", 52, covers[6]);
-//        productList.add(a);
-//
-//        a = new Product("Kani Roll", 58, covers[7]);
-//        productList.add(a);
-//
-//        a = new Product("Lotto Roll", 65, covers[8]);
-//        productList.add(a);
-//
-//        a = new Product("Meshi Ebi Maki", 74, covers[9]);
-//        productList.add(a);
-
-        adapter.notifyDataSetChanged();
     }
 
     /**

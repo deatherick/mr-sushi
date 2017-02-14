@@ -1,5 +1,9 @@
 package com.somadtech.mrsushi;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -25,9 +29,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.somadtech.mrsushi.activities.CartActivity;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
+import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import org.json.JSONException;
@@ -36,10 +42,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
+    private int mNotificationsCount = 1;
+    private ActionBarDrawerToggle drawerToggle;
+    DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +56,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        drawer.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -65,9 +74,88 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
-            openCategoryList();
+            getCategoryList();
         }
 
+
+        openCategoryList();
+        // Run a task to fetch the notifications count
+        new FetchCountTask().execute();
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mDbHelper.closeDB();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            FragmentManager fm = getSupportFragmentManager();
+            if (fm.getBackStackEntryCount() > 0) {
+                Log.i("MainActivity", "popping backstack");
+                fm.popBackStack();
+            } else {
+                Log.i("MainActivity", "nothing on backstack, calling super");
+                //super.onBackPressed();
+            }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+
+        // Get the notifications MenuItem and
+        // its LayerDrawable (layer-list)
+        MenuItem itemCart = menu.findItem(R.id.action_cart);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        Utils.setBadgeCount(this, icon, 9);
+        // Update LayerDrawable's BadgeDrawable
+//        Utils.setBadgeCount(this, icon, mNotificationsCount);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(item.getItemId() == R.id.action_cart){
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
+//            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void getCategoryList(){
 
         // Gets the data repository in write mode
         //SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -189,52 +277,6 @@ public class MainActivity extends AppCompatActivity
                 });
         MySingleton.getInstance(this).addToRequestQueue(stringRequest);
         openCategoryList();
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        mDbHelper.closeDB();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                Log.i("MainActivity", "popping backstack");
-                fm.popBackStack();
-            } else {
-                Log.i("MainActivity", "nothing on backstack, calling super");
-                //super.onBackPressed();
-            }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void openCategoryList(){
@@ -279,5 +321,35 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    /*
+    Updates the count of notifications in the ActionBar.
+     */
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+
+        // force the ActionBar to relayout its MenuItems.
+        // onCreateOptionsMenu(Menu) will be called again.
+        invalidateOptionsMenu();
+    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return 5;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 }
