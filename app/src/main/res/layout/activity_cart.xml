@@ -18,7 +18,7 @@ tools:context=".activities.CartActivity"
     app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
@@ -28,57 +28,96 @@ tools:context=".activities.CartActivity"
     android:layout_below="@+id/toolbar"
     tools:openDrawer="start">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="top"
-        android:orientation="vertical" >
 
-        <ListView
-            android:id="@+id/cart_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/cart_header"
-            android:layout_weight="1" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="top"
+            android:orientation="vertical" >
 
+            <LinearLayout
+                android:id="@+id/cart_header"
+                android:orientation="horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
 
-        <LinearLayout
-            android:id="@+id/cart_header"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
+                <TextView
+                    android:text="Resumen de la orden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtCartTitle"
+                    android:layout_weight="1"
+                    android:textColor="@android:color/background_dark" />
 
-            <TextView
-                android:text="Resumen de la orden"
+                <Button
+                    android:text="Borrar Orden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_empty_cart"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/cart_list_box"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_below="@+id/cart_header"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/txtCartTitle"
-                android:layout_weight="1"
-                android:textColor="@android:color/background_dark" />
-
-            <Button
-                android:text="Borrar Orden"
+                android:layout_above="@+id/offers_footer">
+            <ListView
+                android:id="@+id/cart_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btn_empty_cart"
+                android:layout_alignParentLeft="true"
                 android:layout_weight="1" />
+            </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/offers_footer"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_height="150dp">
 
-        </LinearLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager_introduction"
+                android:layout_width="match_parent"
+                android:fitsSystemWindows="true"
+                tools:listitem="@layout/pager_item"
+                android:layout_height="150dp" />
+
+            <LinearLayout
+                android:id="@+id/viewPagerIndicator"
+                android:layout_width="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:layout_height="35dp">
+
+                <LinearLayout
+                    android:id="@+id/viewPagerCountDots"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
+        </RelativeLayout>
 
-
-
-
-
-
-    <android.support.design.widget.NavigationView
+        <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -88,5 +127,5 @@ tools:context=".activities.CartActivity"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
-</android.support.v4.widget.DrawerLayout>
+    </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

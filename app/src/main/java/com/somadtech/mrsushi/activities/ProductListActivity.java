@@ -1,27 +1,26 @@
-package com.somadtech.mrsushi.fragments;
+package com.somadtech.mrsushi.activities;
 
-import android.app.Activity;
-import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
@@ -33,48 +32,44 @@ import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductsFragment extends Fragment {
+public class ProductListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private RecyclerView recyclerView;
     private ProductsAdapter adapter;
     private List<Product> productList;
-    FragmentActivity listener;
     MrSushiDbHelper mDbHelper;
+    private ActionBarDrawerToggle drawerToggle;
+    DrawerLayout drawer;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof Activity) {
-            this.listener = (FragmentActivity) context;
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back);
-        upArrow.setColorFilter(getResources().getColor(R.color.cardview_light_background), PorterDuff.Mode.SRC_ATOP);
-    }
+        setContentView(R.layout.activity_products_list);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
-        View layout= inflater.inflate(R.layout.fragment_products, parent, false);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        recyclerView = (RecyclerView) layout.findViewById(R.id.recycler_view);
-
-        mDbHelper = new MrSushiDbHelper(getActivity());
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            int category_id = bundle.getInt("category_id", 1);
-            productList = mDbHelper.getProductsByCategory(category_id);// new ArrayList<>();
+        mDbHelper = new MrSushiDbHelper(this);
+        int category_id = getIntent().getIntExtra("category_id", 1);
+        if (category_id != 0) {
+            productList = mDbHelper.getProductsByCategory(category_id);
         } else {
-            productList = mDbHelper.getAllProducts();// new ArrayList<>();
+            productList = mDbHelper.getAllProducts();
         }
 
-        adapter = new ProductsAdapter(getActivity(), productList);
+        adapter = new ProductsAdapter(this, productList);
 
         int CARD_VIEW_COLUMNS;
         boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
@@ -84,16 +79,64 @@ public class ProductsFragment extends Fragment {
             CARD_VIEW_COLUMNS = 2;
         }
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), CARD_VIEW_COLUMNS);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, CARD_VIEW_COLUMNS);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(CARD_VIEW_COLUMNS, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
-        //prepareAlbums();
-
-        return layout;
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_new) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
+            // Handle the camera action
+        }
+        else if(id == R.id.nav_gallery ){
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.putExtra("category_id", item.getTitleCondensed());
+            startActivity(intent);
+        }
+       /* else if (id == R.id.nav_gallery) {
+
+        }
+        else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        }*/
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        else if(id == R.id.action_cart){
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
+//            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     /**
      * RecyclerView item decoration - give equal margin around grid item
@@ -142,30 +185,28 @@ public class ProductsFragment extends Fragment {
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchMenuItem.setVisible(true);
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
-        Bundle bundle = this.getArguments();
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        if (bundle != null) {
-            int category_id = bundle.getInt("category_id", 1);
+        int category_id = getIntent().getIntExtra("category_id", 1);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (category_id != 0) {
             Category category = mDbHelper.getCategory(category_id);
             toolbar.setTitle(category.getItemName());
         } else {
-
             toolbar.setTitle(R.string.products_toolbar);
         }
 
+        return true;
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    public boolean onCreateOptionsMenu(Menu menu) {
         menu.clear();
-        inflater.inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem item = menu.findItem(R.id.action_search);
-        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+        SearchView searchView = new SearchView(getSupportActionBar().getThemedContext());
 
         MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
         MenuItemCompat.setActionView(item, searchView);
@@ -208,7 +249,7 @@ public class ProductsFragment extends Fragment {
                 return false;
             }
         });
-
+        return true;
     }
 
 

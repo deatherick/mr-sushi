@@ -80,7 +80,7 @@
                 android:paddingRight="15dip"
                 android:text="10"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="24dip"
+                android:textSize="20dip"
                 android:textStyle="bold" />
 
 

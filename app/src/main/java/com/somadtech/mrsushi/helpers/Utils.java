@@ -12,7 +12,6 @@ import com.somadtech.mrsushi.R;
  */
 
 public class Utils {
-
     public static void setBadgeCount(Context context, LayerDrawable icon, int count) {
 
         BadgeDrawable badge;
@@ -25,7 +24,7 @@ public class Utils {
             badge = new BadgeDrawable(context);
         }
 
-        badge.setCount(String.valueOf(count));
+        badge.setCount(count);
         icon.mutate();
         icon.setDrawableByLayerId(R.id.ic_badge, badge);
     }

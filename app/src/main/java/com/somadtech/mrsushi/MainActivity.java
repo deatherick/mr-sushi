@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.somadtech.mrsushi.activities.CartActivity;
+import com.somadtech.mrsushi.activities.ProductListActivity;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
@@ -128,9 +129,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // its LayerDrawable (layer-list)
         MenuItem itemCart = menu.findItem(R.id.action_cart);
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-        Utils.setBadgeCount(this, icon, 9);
+
         // Update LayerDrawable's BadgeDrawable
-//        Utils.setBadgeCount(this, icon, mNotificationsCount);
+        Utils.setBadgeCount(this, icon, mNotificationsCount);
 
         return true;
     }
@@ -146,10 +147,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.action_settings) {
             return true;
         }
-        else if(item.getItemId() == R.id.action_cart){
+        else if(id == R.id.action_cart){
             Intent intent = new Intent(this, CartActivity.class);
             startActivity(intent);
-//            finish();
         }
 
         return super.onOptionsItemSelected(item);
@@ -195,16 +195,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         String[] covers = new String[]{
                                 "http://logok.org/wp-content/uploads/2014/04/Apple-Logo-black.png"};
-//                                R.drawable.sopas,
-//                                R.drawable.sushi,
-//                                R.drawable.combos,
-//                                R.drawable.cocina_caliente,
-//                                R.drawable.extras,
-//                                R.drawable.postres,
-//                                R.drawable.bebidas};
-
-                        // Do something with the response
-
 
                         // Insert the new row, returning the primary key value of the new row
                         long newRowId = mDbHelper.createCategory(new Category(1, "Ensaladas y entradas", covers[0]));
@@ -220,47 +210,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         String[] product_covers = new String[]{
                                 "https://s3-media4.fl.yelpcdn.com/bphoto/4fWgAz_uHWfhvB0OiS4OVA/348s.jpg"};
-//                                R.drawable.image2,
-//                                R.drawable.image3,
-//                                R.drawable.image4,
-//                                R.drawable.image5,
-//                                R.drawable.image1,
-//                                R.drawable.image2,
-//                                R.drawable.image3,
-//                                R.drawable.image4,
-//                                R.drawable.image5,
-//                                R.drawable.image1};
-
-                  /*      Product a = new Product(1, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(2, "Manchego Maki", 52, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(3, "Kani Roll", 58, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(4, "Lotto Roll", 65, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(5, "Meshi Ebi Maki", 74, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(6, "Calamares Tempura", 45, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(7, "Manchego Maki", 52, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(8, "Kani Roll", 58, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(9, "Lotto Roll", 65, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);
-
-                        a = new Product(10, "Meshi Ebi Maki", 74, product_covers[0], new Category(1, "Ensaladas y entradas", covers[0]));
-                        mDbHelper.createProduct(a);*/
-
                         Gson gson = new Gson();
                         String json = gson.toJson(mDbHelper.getProduct(1));
 
@@ -309,6 +258,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // Handle the camera action
         }
+        else if(id == R.id.nav_gallery ){
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent.putExtra("category_id", item.getTitleCondensed());
+            startActivity(intent);
+        }
        /* else if (id == R.id.nav_gallery) {
 
         }
@@ -344,7 +299,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected Integer doInBackground(Void... params) {
             // example count. This is where you'd
             // query your data store for the actual count.
-            return 5;
+            mNotificationsCount++;
+            return mNotificationsCount;
         }
 
         @Override

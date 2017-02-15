@@ -2,11 +2,10 @@ package com.somadtech.mrsushi.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +20,7 @@ import android.widget.ListView;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.activities.ProductListActivity;
 import com.somadtech.mrsushi.adapters.CategoryAdapter;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
@@ -81,20 +81,10 @@ public class CategoriesFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapter, View v, int position, long arg3)
             {
                 Category value = (Category)adapter.getItemAtPosition(position);
-                //Intent intent = new Intent(getActivity(), ProductsFragment.class);
-                //startActivity(intent);
-                ProductsFragment fragment2 = new ProductsFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("category_id", value.getItemId());
-                fragment2.setArguments(bundle);
-
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction =        fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, fragment2);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-                // assuming string and if you want to get the value on click of list item
-                // do what you intend to do on click of listview row
+                Intent intent = new Intent(getActivity(), ProductListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("category_id", value.getItemId());
+                startActivity(intent);
             }
         });
     }
