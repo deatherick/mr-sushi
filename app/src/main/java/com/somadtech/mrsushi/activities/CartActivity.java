@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,7 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.somadtech.mrsushi.adapters.ViewPagerAdapter;
+import com.somadtech.mrsushi.adapters.PromotionsViewPagerAdapter;
 import com.somadtech.mrsushi.fragments.EmptyCartDialogFragment;
 import com.somadtech.mrsushi.helpers.CartClickListener;
 import com.somadtech.mrsushi.MainActivity;
@@ -47,7 +46,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
     private LinearLayout pager_indicator;
     private int dotsCount;
     private ImageView[] dots;
-    private ViewPagerAdapter mAdapter;
+    private PromotionsViewPagerAdapter mAdapter;
 
     private int[] mImageResources = {
             R.drawable.sopas,
@@ -170,6 +169,16 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    long getCategoryId(MenuItem item){
+        String category_slug = item.getTitleCondensed().toString();
+        if (!category_slug.equals("")) {
+            long category_id = mDbHelper.getCategoryId(category_slug);
+            return category_id;
+        } else {
+            return 1;
+        }
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -178,17 +187,17 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_new) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-
-            // Handle the camera action
         }
-       /* else if (id == R.id.nav_gallery) {
-
+        else if(id == R.id.nav_locations ){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("fragment_id", 2);
+            startActivity(intent);
         }
-        else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        }*/
+        else{
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.putExtra("category_id", getCategoryId(item));
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -259,7 +268,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
 
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
 
-        mAdapter = new ViewPagerAdapter(CartActivity.this, mImageResources);
+        mAdapter = new PromotionsViewPagerAdapter(CartActivity.this, mImageResources);
         intro_images.setAdapter(mAdapter);
         intro_images.setCurrentItem(0);
         intro_images.setOnPageChangeListener(this);

@@ -10,7 +10,7 @@
     <dimen name="category_list_row">64dp</dimen>
 
     <dimen name="item_offset">10dp</dimen>
-    <dimen name="detail_backdrop_height">250dp</dimen>
+    <dimen name="detail_backdrop_height">350dp</dimen>
     <dimen name="backdrop_title">30dp</dimen>
     <dimen name="backdrop_subtitle">18dp</dimen>
     <dimen name="card_margin">5dp</dimen>

@@ -11,6 +11,7 @@ public class Category {
     private int itemId;
     private String itemName;
     private String itemImage;
+    private String slug;
 
     // constructor
     public Category() {
@@ -46,5 +47,11 @@ public class Category {
         this.itemImage = itemImage;
     }
 
+    public String getSlug() {
+        return slug;
+    }
 
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
 }

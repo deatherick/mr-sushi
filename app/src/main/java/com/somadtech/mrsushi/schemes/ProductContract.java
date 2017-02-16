@@ -15,6 +15,8 @@ public class ProductContract {
                     ProductEntry.COLUMN_NAME_DESC + " TEXT," +
                     ProductEntry.COLUMN_NAME_PRICE + " REAL," +
                     ProductEntry.COLUMN_NAME_CAT + " INTEGER," +
+                    ProductEntry.COLUMN_NAME_SLUG + " TEXT," +
+                    ProductEntry.COLUMN_NAME_THUMB + " TEXT," +
                     ProductEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
     static final String SQL_DELETE_PRODUCTS =
@@ -31,7 +33,9 @@ public class ProductContract {
         static final String COLUMN_NAME_DESC = "description";
         static final String COLUMN_NAME_PRICE = "price";
         static final String COLUMN_NAME_CAT = "category";
-        static final String COLUMN_NAME_IMAGE = "image";
+        static final String COLUMN_NAME_SLUG = "slug";
+        static final String COLUMN_NAME_THUMB = "thumbnail";
+        static final String COLUMN_NAME_IMAGE = "full_image";
     }
 }
 

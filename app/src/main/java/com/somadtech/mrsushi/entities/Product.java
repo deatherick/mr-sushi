@@ -20,8 +20,10 @@ public class Product {
     private String description;
     private double originalPrice;
     private String thumbnail;
+    private String full_image;
     private List<Variant> variants;
     private Category category;
+    private String slug;
 
     public Product() {
     }
@@ -77,12 +79,10 @@ public class Product {
         this.originalPrice = originalPrice;
     }
 
-    @JsonProperty("image")
     public String getThumbnail() {
         return thumbnail;
     }
 
-    @JsonProperty("image")
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
     }
@@ -103,4 +103,19 @@ public class Product {
         this.category = category;
     }
 
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getFull_image() {
+        return full_image;
+    }
+
+    public void setFull_image(String full_image) {
+        this.full_image = full_image;
+    }
 }

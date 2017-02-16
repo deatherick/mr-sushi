@@ -8,17 +8,14 @@ import android.provider.BaseColumns;
  */
 
 public class IngredientContract {
-    static final String SQL_CREATE_INGREDIENT =
+    static final String SQL_CREATE_INGREDIENTS =
             "CREATE TABLE " + IngredientEntry.TABLE_NAME + " (" +
-                    IngredientEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    IngredientEntry.COLUMN_NAME_PRODUCT + " INTEGER," +
-                    IngredientEntry.COLUMN_NAME_VARIANT + " INTEGER," +
-                    IngredientEntry.COLUMN_NAME_OBSERVATIONS + " TEXT," +
-                    IngredientEntry.COLUMN_NAME_ORDER + " INTEGER," +
-                    IngredientEntry.COLUMN_NAME_QTY + " INTEGER," +
-                    IngredientEntry.COLUMN_NAME_STATE + " TEXT)";
+                    IngredientEntry._ID + " INTEGER PRIMARY KEY," +
+                    IngredientEntry.COLUMN_NAME_NAME + " TEXT," +
+                    IngredientEntry.COLUMN_NAME_SLUG + " TEXT," +
+                    IngredientEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
-    static final String SQL_DELETE_INGREDIENT =
+    static final String SQL_DELETE_INGREDIENTS =
             "DROP TABLE IF EXISTS " + IngredientEntry.TABLE_NAME;
 
     // To prevent someone from accidentally instantiating the contract class,
@@ -27,13 +24,10 @@ public class IngredientContract {
 
     /* Inner class that defines the table contents */
     static class IngredientEntry implements BaseColumns {
-        static final String TABLE_NAME = "cart";
-        static final String COLUMN_NAME_PRODUCT = "product_id";
-        static final String COLUMN_NAME_VARIANT = "variant_id";
-        static final String COLUMN_NAME_OBSERVATIONS = "observations";
-        static final String COLUMN_NAME_ORDER = "order_id";
-        static final String COLUMN_NAME_QTY = "quantity";
-        static final String COLUMN_NAME_STATE = "state";
+        static final String TABLE_NAME = "ingredients";
+        static final String COLUMN_NAME_NAME = "name";
+        static final String COLUMN_NAME_SLUG = "slug";
+        static final String COLUMN_NAME_IMAGE = "image";
     }
 }
 

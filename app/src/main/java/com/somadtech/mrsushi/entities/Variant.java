@@ -10,13 +10,16 @@ public class Variant {
     private int id;
     private int product_id;
     private String name;
+    private String slug;
     private double price;
+    private String image;
 
     public Variant(){
         this.id = 0;
         this.product_id = 0;
         this.name = "";
         this.price = 0;
+        this.slug = "";
     }
 
     public int getId() {
@@ -49,6 +52,22 @@ public class Variant {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }

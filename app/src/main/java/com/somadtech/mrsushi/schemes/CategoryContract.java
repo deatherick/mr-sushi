@@ -12,6 +12,7 @@ public class CategoryContract {
             "CREATE TABLE " + CategoryEntry.TABLE_NAME + " (" +
                     CategoryEntry._ID + " INTEGER PRIMARY KEY," +
                     CategoryEntry.COLUMN_NAME_NAME + " TEXT," +
+                    CategoryEntry.COLUMN_NAME_SLUG + " TEXT," +
                     CategoryEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
     static final String SQL_DELETE_CATEGORIES =
@@ -25,6 +26,7 @@ public class CategoryContract {
     static class CategoryEntry implements BaseColumns {
         static final String TABLE_NAME = "categories";
         static final String COLUMN_NAME_NAME = "name";
+        static final String COLUMN_NAME_SLUG = "slug";
         static final String COLUMN_NAME_IMAGE = "image";
     }
 }

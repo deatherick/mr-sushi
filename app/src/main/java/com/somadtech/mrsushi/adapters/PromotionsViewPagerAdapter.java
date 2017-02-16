@@ -18,12 +18,12 @@ import com.somadtech.mrsushi.entities.Cart;
  * Project: mrsushi-android
  */
 
-public class ViewPagerAdapter extends PagerAdapter {
+public class PromotionsViewPagerAdapter extends PagerAdapter {
     private Context mContext;
     private int[] mResources;
     private Cart cart;
 
-    public ViewPagerAdapter(Context mContext, int[] mResources) {
+    public PromotionsViewPagerAdapter(Context mContext, int[] mResources) {
         this.mContext = mContext;
         this.mResources = mResources;
     }

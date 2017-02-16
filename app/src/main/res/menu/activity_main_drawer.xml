@@ -35,8 +35,13 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Bebidas" />
         <item
+            android:id="@+id/nav_locations"
             android:icon="@drawable/ic_menu_manage"
             android:title="Ubicaciones" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Ajustes" />
     </group>
 
 </menu>

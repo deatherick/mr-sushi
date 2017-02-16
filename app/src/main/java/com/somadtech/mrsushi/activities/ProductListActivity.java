@@ -62,7 +62,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mDbHelper = new MrSushiDbHelper(this);
-        int category_id = getIntent().getIntExtra("category_id", 1);
+        long category_id = getIntent().getIntExtra("category_id", 1);
         if (category_id != 0) {
             productList = mDbHelper.getProductsByCategory(category_id);
         } else {
@@ -86,6 +86,22 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         recyclerView.setAdapter(adapter);
     }
 
+    void loadProducts(MenuItem item){
+        String category_slug = item.getTitleCondensed().toString();
+        if (!category_slug.equals("")) {
+            long category_id = mDbHelper.getCategoryId(category_slug);
+            if(category_id != 0){
+                productList = mDbHelper.getProductsByCategory(category_id);
+            } else {
+                productList = mDbHelper.getAllProducts();
+            }
+        } else {
+            productList = mDbHelper.getAllProducts();
+        }
+        adapter = new ProductsAdapter(this, productList);
+        recyclerView.setAdapter(adapter);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
@@ -94,15 +110,16 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         if (id == R.id.nav_new) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-
-            // Handle the camera action
         }
-        else if(id == R.id.nav_gallery ){
-            Intent intent = new Intent(this, ProductListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.putExtra("category_id", item.getTitleCondensed());
+        else if(id == R.id.nav_locations ){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("fragment_id", 2);
             startActivity(intent);
         }
+        else{
+            loadProducts(item);
+        }
+
        /* else if (id == R.id.nav_gallery) {
 
         }
@@ -189,7 +206,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchMenuItem.setVisible(true);
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
-        int category_id = getIntent().getIntExtra("category_id", 1);
+        long category_id = getIntent().getIntExtra("category_id", 1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (category_id != 0) {
             Category category = mDbHelper.getCategory(category_id);

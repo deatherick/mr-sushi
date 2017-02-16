@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingTop="2.5dp"
     android:paddingBottom="2.5dp">
@@ -14,6 +15,21 @@
         android:padding="10dp">
 
         <!-- ListRow Left sied Thumbnail image -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:layout_marginTop="-10dp">
+
+            <ImageView
+                android:id="@+id/cart_label_img"
+                android:src="@drawable/ic_label"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="100dp"
+                android:layout_width="75dp"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="false" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/thumbnail"
@@ -31,8 +47,9 @@
         </LinearLayout>
 
 
-        <TextView
+        <com.somadtech.mrsushi.font.MontserratTextView
             android:id="@+id/from_name"
+            custom:typeface="montserratSemiBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -51,8 +68,9 @@
             android:orientation="horizontal"
             android:layout_marginBottom="10dip">
 
-            <TextView
+            <com.somadtech.mrsushi.font.MontserratTextView
                 android:id="@+id/variant_name"
+                custom:typeface="montserratLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -71,8 +89,9 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_minus" />
 
-            <TextView
+            <com.somadtech.mrsushi.font.MontserratTextView
                 android:id="@+id/cart_product_quantity"
+                custom:typeface="montserratLight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|center_horizontal"
@@ -82,8 +101,6 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20dip"
                 android:textStyle="bold" />
-
-
 
             <ImageView
                 android:id="@+id/cart_plus_img"
@@ -99,8 +116,9 @@
                 android:src="@drawable/ic_remove" />
         </LinearLayout>
 
-        <TextView
+        <com.somadtech.mrsushi.font.MontserratTextView
             android:id="@+id/plist_observation_text"
+            custom:typeface="montserratLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"

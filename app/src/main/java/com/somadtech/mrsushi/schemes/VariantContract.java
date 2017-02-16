@@ -13,6 +13,7 @@ public class VariantContract {
                     VariantEntry._ID + " INTEGER PRIMARY KEY," +
                     VariantEntry.COLUMN_NAME_NAME + " TEXT," +
                     VariantEntry.COLUMN_NAME_PRICE + " REAL," +
+                    VariantEntry.COLUMN_NAME_SLUG + " TEXT," +
                     VariantEntry.COLUMN_NAME_PR_ID + " INTEGER)";
 
     static final String SQL_DELETE_VARIANTS =
@@ -27,6 +28,7 @@ public class VariantContract {
         static final String TABLE_NAME = "variants";
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_PRICE = "price";
+        static final String COLUMN_NAME_SLUG = "slug";
         static final String COLUMN_NAME_PR_ID = "product_id";
     }
 }
