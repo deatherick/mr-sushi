@@ -132,14 +132,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_new) {
             onSectionAttached(1);
         }
-        else if(id == R.id.nav_gallery ){
+
+        else if(id == R.id.nav_locations ){
+            onSectionAttached(2);
+        }
+        else if(id == R.id.nav_settings ){
+            return true;
+        }
+        else {
             Intent intent = new Intent(this, ProductListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             intent.putExtra("category_id", item.getTitleCondensed());
             startActivity(intent);
-        }
-        else if(id == R.id.nav_locations ){
-            onSectionAttached(2);
         }
        /* else if (id == R.id.nav_gallery) {
 

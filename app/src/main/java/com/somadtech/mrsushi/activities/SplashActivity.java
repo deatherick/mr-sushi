@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 
 import com.android.volley.Cache;
 import com.android.volley.Network;
@@ -18,9 +18,8 @@ import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.StringRequest;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.MySingleton;
 import com.somadtech.mrsushi.R;
@@ -31,19 +30,20 @@ import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SplashActivity extends AppCompatActivity {
 
-    MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
+    MrSushiDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         Button button = (Button) findViewById(R.id.button2);
-
+        mDbHelper = new MrSushiDbHelper(this);
         button.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 getBulkData();
@@ -75,7 +75,7 @@ public class SplashActivity extends AppCompatActivity {
         // Start the queue
         mRequestQueue.start();
 
-        String url ="http://192.168.1.145:3000/db";
+        String url ="http://192.168.1.15:3000/db";
 
         // Create a new map of values, where column names are the keys
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -83,15 +83,15 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Log.i("MainActivity", response);
-                        ObjectMapper objectMapper = new ObjectMapper();
+                        Gson gson = new Gson();
                         try {
                             JSONObject obj = new JSONObject(response);
-                            JavaType type = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, Product.class);
-                            ArrayList<Product> products = objectMapper.readValue(obj.getJSONArray("Products").toString(), type);
-                            for (Product product: products) {
+                            Type founderListType = new TypeToken<ArrayList<Product>>(){}.getType();
+                            List<Product> generalInfoObject = gson.fromJson(obj.getJSONArray("Products").toString(), founderListType);
+                            for (Product product: generalInfoObject) {
                                 mDbHelper.createProduct(product);
                             }
-                        } catch (IOException | JSONException e) {
+                        } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         String[] covers = new String[]{
@@ -111,7 +111,6 @@ public class SplashActivity extends AppCompatActivity {
 
                         String[] product_covers = new String[]{
                                 "https://s3-media4.fl.yelpcdn.com/bphoto/4fWgAz_uHWfhvB0OiS4OVA/348s.jpg"};
-                        Gson gson = new Gson();
                         String json = gson.toJson(mDbHelper.getProduct(1));
 
                         Log.i("producto 1: ", json);

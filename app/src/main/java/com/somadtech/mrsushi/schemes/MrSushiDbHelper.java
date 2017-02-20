@@ -9,10 +9,12 @@ import android.util.Log;
 
 import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Variant;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by smt on 2/6/17.
@@ -23,7 +25,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     private static final String LOG = "MrSushiDbHelper";
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "MrSushi.db";
 
     public MrSushiDbHelper(Context context) {
@@ -38,6 +40,9 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductContract.SQL_CREATE_PRODUCTS);
         db.execSQL(PromotionContract.SQL_CREATE_PROMOTIONS);
         db.execSQL(VariantContract.SQL_CREATE_VARIANTS);
+
+        // Pivot tables
+        db.execSQL(IngredientProductContract.SQL_CREATE_INGREDIENT_PRODUCT);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -50,6 +55,9 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductContract.SQL_DELETE_PRODUCTS);
         db.execSQL(PromotionContract.SQL_DELETE_PROMOTIONS);
         db.execSQL(VariantContract.SQL_DELETE_VARIANTS);
+
+        //Pivot tables
+        db.execSQL(IngredientProductContract.SQL_DELETE_INGREDIENT_PRODUCT);
         onCreate(db);
     }
 
@@ -276,8 +284,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null){
+        if (c != null && c.getCount() > 0){
             c.moveToFirst();
+        } else {
+            return new Category();
         }
 
 
@@ -392,7 +402,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(ProductContract.ProductEntry.COLUMN_NAME_PRICE, product.getOriginalPrice());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_CAT, product.getCategory().getItemId());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_SLUG, product.getSlug());
-
+        createIngredientsByProduct(product, product.getIngredients());
         // insert row
 
         int id = (int) db.insertWithOnConflict(ProductContract.ProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
@@ -416,8 +426,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null){
+        if (c != null && c.getCount() > 0){
             c.moveToFirst();
+        } else {
+            return new Product();
         }
 
         Product prod = new Product();
@@ -430,6 +442,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
         prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_THUMB)));
         prod.setSlug(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_SLUG)));
+        prod.setIngredients(getIngredientsByProduct(prod.getId()));
 
         return prod;
     }
@@ -453,10 +466,13 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 prod.setId(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID)));
                 prod.setName(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_NAME)));
                 prod.setDescription(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_DESC)));
-                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
+                prod.setFull_image(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
                 prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
                 prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
                 prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
+                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_THUMB)));
+                prod.setSlug(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_SLUG)));
+                prod.setIngredients(getIngredientsByProduct(prod.getId()));
 
                 products.add(prod);
             } while (c.moveToNext());
@@ -485,10 +501,13 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 prod.setId(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID)));
                 prod.setName(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_NAME)));
                 prod.setDescription(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_DESC)));
-                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
+                prod.setFull_image(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_IMAGE)));
                 prod.setOriginalPrice(Double.parseDouble(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_PRICE))));
                 prod.setCategory(getCategory(c.getInt(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_CAT))));
                 prod.setVariants(getVariantsByProduct(c.getInt(c.getColumnIndex(ProductContract.ProductEntry._ID))));
+                prod.setThumbnail(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_THUMB)));
+                prod.setSlug(c.getString(c.getColumnIndex(ProductContract.ProductEntry.COLUMN_NAME_SLUG)));
+                prod.setIngredients(getIngredientsByProduct(prod.getId()));
 
                 products.add(prod);
             } while (c.moveToNext());
@@ -513,6 +532,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(ProductContract.ProductEntry.COLUMN_NAME_PRICE, product.getOriginalPrice());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_CAT, product.getCategory().getItemId());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_SLUG, product.getSlug());
+        createIngredientsByProduct(product, product.getIngredients());
 
         // updating row
         return db.update(ProductContract.ProductEntry.TABLE_NAME, values, ProductContract.ProductEntry._ID + " = ?",
@@ -649,6 +669,73 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         variant.setSlug(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_SLUG)));
 
         return variant;
+    }
+    //endregion
+
+    //region Pivot
+
+    public long createIngredientsByProduct(Product product, List<Ingredient> ingredients) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        for (Ingredient ingredient: ingredients) {
+            ContentValues values = new ContentValues();
+            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_INGREDIENT_ID, ingredient.getId());
+            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
+            db.insertWithOnConflict(IngredientProductContract.IngredientProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+
+        return 1;
+    }
+
+    public List<Ingredient> getIngredientsByProduct(int product_id){
+        ArrayList<Cart> carts = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + IngredientProductContract.IngredientProductEntry.TABLE_NAME + " WHERE "
+                + IngredientProductContract.IngredientProductEntry.COLUMN_NAME_PRODUCT_ID + " = " + product_id;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        List<Ingredient> ingredients = new ArrayList<>();
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                int ingredient_id = c.getInt(c.getColumnIndex(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_INGREDIENT_ID));
+                Ingredient ingredient = getIngredient(ingredient_id);
+                ingredients.add(ingredient);
+            } while (c.moveToNext());
+        }
+
+        return ingredients;
+    }
+    //endregion
+
+    //region Ingredients
+
+    public Ingredient getIngredient(int ingredient_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + IngredientContract.IngredientEntry.TABLE_NAME + " WHERE "
+                + IngredientContract.IngredientEntry._ID + " = " + ingredient_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return new Ingredient();
+        }
+
+
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(c.getInt(c.getColumnIndex(IngredientContract.IngredientEntry._ID)));
+        ingredient.setName(c.getString(c.getColumnIndex(IngredientContract.IngredientEntry.COLUMN_NAME_NAME)));
+        ingredient.setSlug(c.getString(c.getColumnIndex(IngredientContract.IngredientEntry.COLUMN_NAME_SLUG)));
+        ingredient.setImage(c.getString(c.getColumnIndex(IngredientContract.IngredientEntry.COLUMN_NAME_IMAGE)));
+
+        return ingredient;
     }
     //endregion
 

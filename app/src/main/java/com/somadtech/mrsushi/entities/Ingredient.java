@@ -5,12 +5,20 @@ package com.somadtech.mrsushi.entities;
  * Project: mrsushi-android
  */
 
-class Ingredient {
+public  class Ingredient {
 
     private int id;
     private String name;
     private String slug;
     private String image;
+
+    public Ingredient(){
+
+    }
+
+    public Ingredient(int id){
+        this.id = id;
+    }
 
     public int getId() {
         return id;

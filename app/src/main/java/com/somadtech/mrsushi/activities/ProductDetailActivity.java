@@ -41,7 +41,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         txtName.setText(product.getName());
         txtDesc.setText(product.getDescription());
         Picasso.with(this)
-                .load(product.getThumbnail())
+                .load(product.getFull_image())
                 .placeholder(R.drawable.image1)
                 .error(R.drawable.image1)
                 .into(imgProduct);

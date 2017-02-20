@@ -52,10 +52,8 @@ public class CategoriesFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDbHelper = new MrSushiDbHelper(getActivity());
-        adapter = new CategoryAdapter(getActivity(), mDbHelper.getAllCategories());
-        setHasOptionsMenu(true);
 
+        setHasOptionsMenu(true);
     }
 
     // The onCreateView method is called when Fragment should create its View object hierarchy,
@@ -71,6 +69,9 @@ public class CategoriesFragment extends Fragment {
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        mDbHelper = new MrSushiDbHelper(getActivity());
+        adapter = new CategoryAdapter(getActivity(), mDbHelper.getAllCategories());
+
         mListView = (ListView) getActivity().findViewById(R.id.category_list);
         mListView.setAdapter(adapter);
         mListView.setTextFilterEnabled(true);
@@ -87,6 +88,8 @@ public class CategoriesFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
     }
 
     // This method is called when the fragment is no longer connected to the Activity

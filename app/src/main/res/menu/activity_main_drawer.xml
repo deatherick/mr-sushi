@@ -14,25 +14,32 @@
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
+            android:titleCondensed="2"
             android:title="Sopas" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"
+            android:titleCondensed="3"
             android:title="Barra Sushi" />
         <item
             android:icon="@drawable/ic_menu_gallery"
+            android:titleCondensed="4"
             android:title="Combos" />
         <item
             android:icon="@drawable/ic_menu_slideshow"
+            android:titleCondensed="5"
             android:title="Cocina Caliente" />
         <item
             android:icon="@drawable/ic_menu_manage"
+            android:titleCondensed="6"
             android:title="Extras" />
         <item
             android:icon="@drawable/ic_menu_gallery"
+            android:titleCondensed="7"
             android:title="Postres" />
         <item
             android:icon="@drawable/ic_menu_slideshow"
+            android:titleCondensed="8"
             android:title="Bebidas" />
         <item
             android:id="@+id/nav_locations"

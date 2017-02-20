@@ -6,7 +6,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -62,7 +61,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         mDbHelper = new MrSushiDbHelper(this);
-        long category_id = getIntent().getIntExtra("category_id", 1);
+        int category_id = getIntent().getIntExtra("category_id", 1);
         if (category_id != 0) {
             productList = mDbHelper.getProductsByCategory(category_id);
         } else {
@@ -206,7 +205,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
         mSearchMenuItem.setVisible(true);
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
-        long category_id = getIntent().getIntExtra("category_id", 1);
+        int category_id = getIntent().getIntExtra("category_id", 1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (category_id != 0) {
             Category category = mDbHelper.getCategory(category_id);

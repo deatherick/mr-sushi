@@ -2,9 +2,9 @@ package com.somadtech.mrsushi.entities;
 
 import android.annotation.SuppressLint;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,20 +12,24 @@ import java.util.List;
  * Project Name: Mrsushi
  */
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 
     private int id;
     private String name;
     private String description;
+    @SerializedName("price")
     private double originalPrice;
     private String thumbnail;
     private String full_image;
     private List<Variant> variants;
+
+    private List<Ingredient> ingredients;
+
     private Category category;
     private String slug;
 
     public Product() {
+        ingredients = new ArrayList<>();
     }
 
     public Product(String name, int originalPrice, String thumbnail) {
@@ -67,14 +71,12 @@ public class Product {
     }
 
     @SuppressLint("DefaultLocale")
-    @JsonProperty("price")
     public String getOriginalPrice() {
         //DecimalFormat df2 = new DecimalFormat(".##");
         return String.format("%.2f", originalPrice);
         //return df2.format(originalPrice);
     }
 
-    @JsonProperty("price")
     public void setOriginalPrice(double originalPrice) {
         this.originalPrice = originalPrice;
     }
@@ -93,6 +95,14 @@ public class Product {
 
     public void setVariants(List<Variant> variants) {
         this.variants = variants;
+    }
+
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
     public Category getCategory() {
@@ -118,4 +128,5 @@ public class Product {
     public void setFull_image(String full_image) {
         this.full_image = full_image;
     }
+
 }
