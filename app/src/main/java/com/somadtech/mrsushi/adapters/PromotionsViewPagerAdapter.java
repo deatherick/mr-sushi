@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.activities.OffersDetailActivity;
 import com.somadtech.mrsushi.activities.ProductDetailActivity;
 import com.somadtech.mrsushi.entities.Cart;
 
@@ -46,7 +47,7 @@ public class PromotionsViewPagerAdapter extends PagerAdapter {
         imageView.setImageResource(mResources[position]);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                Intent intent = new Intent(mContext, OffersDetailActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 intent.putExtra("product_id", 1);
                 mContext.startActivity(intent);

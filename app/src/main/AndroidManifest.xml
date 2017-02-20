@@ -38,6 +38,9 @@
             android:name=".activities.ProductListActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".activities.OffersDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activities.ProductDetailActivity"
             android:screenOrientation="portrait" />
         <activity
