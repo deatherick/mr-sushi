@@ -64,10 +64,10 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
-    long getCategoryId(MenuItem item){
+    int getCategoryId(MenuItem item){
         String category_slug = item.getTitleCondensed().toString();
         if (!category_slug.equals("")) {
-            long category_id = mDbHelper.getCategoryId(category_slug);
+            int category_id = mDbHelper.getCategoryId(category_slug);
             return category_id;
         } else {
             return 1;

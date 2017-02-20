@@ -2,6 +2,8 @@ package com.somadtech.mrsushi.entities;
 
 import android.annotation.SuppressLint;
 
+import java.util.Locale;
+
 /**
  * Created by smt on 2/6/17.
  * Project: mrsushi-android
@@ -56,9 +58,8 @@ public class Variant {
         this.name = name;
     }
 
-    @SuppressLint("DefaultLocale")
     public String getPrice() {
-        return String.format("%.2f", price);
+        return String.format(Locale.US, "%.2f", price);
     }
 
     public void setPrice(double price) {

@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.helpers.CartClickListener;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Cart;
@@ -145,8 +146,12 @@ public class CartAdapter extends ArrayAdapter<Cart> {
                 if (constraint != null) {
                     if (orig != null && orig.size() > 0) {
                         for (final Cart g : orig) {
-                            if (g.getProduct().getName().toLowerCase()
-                                    .contains(constraint.toString()))
+                            String ingr_text = "";
+                            for (Ingredient ingredient : g.getProduct().getIngredients()) {
+                                ingr_text += " " + ingredient.getName().toLowerCase();
+                            }
+                            final String text = g.getProduct().getName().toLowerCase() + ingr_text;
+                            if (text.contains(constraint.toString()))
                                 results.add(g);
                         }
                     }

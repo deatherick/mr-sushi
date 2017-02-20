@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by smt on 1/02/17.
@@ -70,9 +71,8 @@ public class Product {
         this.name = name;
     }
 
-    @SuppressLint("DefaultLocale")
     public String getOriginalPrice() {
-        return String.format("%.2f", originalPrice);
+        return String.format(Locale.US, "%.2f", originalPrice);
     }
 
     public void setOriginalPrice(double originalPrice) {

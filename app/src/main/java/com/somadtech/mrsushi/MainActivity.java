@@ -140,8 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else {
             Intent intent = new Intent(this, ProductListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            intent.putExtra("category_id", item.getTitleCondensed());
+            intent.putExtra("category_id", getCategoryId(item));
             startActivity(intent);
         }
        /* else if (id == R.id.nav_gallery) {
@@ -158,6 +157,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    int getCategoryId(MenuItem item){
+        String category_slug = item.getTitleCondensed().toString();
+        if (!category_slug.equals("")) {
+            int category_id = mDbHelper.getCategoryId(category_slug);
+            return category_id;
+        } else {
+            return 1;
+        }
+    }
 
     /*
     Updates the count of notifications in the ActionBar.

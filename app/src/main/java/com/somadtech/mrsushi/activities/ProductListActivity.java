@@ -25,6 +25,7 @@ import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.ProductsAdapter;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
@@ -88,7 +89,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
     void loadProducts(MenuItem item){
         String category_slug = item.getTitleCondensed().toString();
         if (!category_slug.equals("")) {
-            long category_id = mDbHelper.getCategoryId(category_slug);
+            int category_id = mDbHelper.getCategoryId(category_slug);
             if(category_id != 0){
                 productList = mDbHelper.getProductsByCategory(category_id);
             } else {
@@ -273,7 +274,11 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         query = query.toLowerCase();
         final List<Product> filteredModelList = new ArrayList<>();
         for (Product model : models) {
-            final String text = model.getName().toLowerCase();
+            String ingr_text = "";
+            for (Ingredient ingredient : model.getIngredients()) {
+                ingr_text += " " + ingredient.getName().toLowerCase();
+            }
+            final String text = model.getName().toLowerCase() + ingr_text;
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }

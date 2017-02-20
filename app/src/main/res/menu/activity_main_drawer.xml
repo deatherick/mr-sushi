@@ -5,47 +5,39 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_new"
-            android:title="Nuevo" />
+            android:title="Categorias" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:titleCondensed="1"
-            android:title="Ensaladas y Entradas" />
+            android:titleCondensed="ensaladas-y-entradas"
+            android:title="Ensaladas y Enstradas" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:titleCondensed="2"
+            android:titleCondensed="sopa"
             android:title="Sopas" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:titleCondensed="3"
+            android:titleCondensed="barra-sushi"
             android:title="Barra Sushi" />
         <item
-            android:icon="@drawable/ic_menu_gallery"
-            android:titleCondensed="4"
+            android:titleCondensed="combos"
             android:title="Combos" />
         <item
-            android:icon="@drawable/ic_menu_slideshow"
-            android:titleCondensed="5"
+            android:titleCondensed="cocina-caliente"
             android:title="Cocina Caliente" />
         <item
-            android:icon="@drawable/ic_menu_manage"
-            android:titleCondensed="6"
+            android:titleCondensed="extras"
             android:title="Extras" />
         <item
-            android:icon="@drawable/ic_menu_gallery"
-            android:titleCondensed="7"
+            android:titleCondensed="postres"
             android:title="Postres" />
         <item
-            android:icon="@drawable/ic_menu_slideshow"
-            android:titleCondensed="8"
+            android:titleCondensed="bebidas"
             android:title="Bebidas" />
         <item
             android:id="@+id/nav_locations"
-            android:icon="@drawable/ic_menu_manage"
             android:title="Ubicaciones" />
         <item
+            android:visible="false"
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="Ajustes" />

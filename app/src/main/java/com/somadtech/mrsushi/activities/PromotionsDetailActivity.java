@@ -53,10 +53,10 @@ public class PromotionsDetailActivity extends AppCompatActivity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                observations_text = (EditText) findViewById(R.id.observations_text);
-                String observations = observations_text.getText().toString();
-                Cart cart = new Cart(product, variant, observations);
-                mDbHelper.createCart(cart);
+//                observations_text = (EditText) findViewById(R.id.observations_text);
+//                String observations = observations_text.getText().toString();
+//                Cart cart = new Cart(product, variant, observations);
+//                mDbHelper.createCart(cart);
                 finish();
             }
         });

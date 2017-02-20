@@ -307,7 +307,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
      * @param category_slug String
      * @return long
      */
-    public long getCategoryId(String category_slug) {
+    public int getCategoryId(String category_slug) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + CategoryContract.CategoryEntry.TABLE_NAME + " WHERE "
