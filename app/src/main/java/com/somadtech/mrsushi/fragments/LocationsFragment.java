@@ -6,22 +6,31 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.ProductListActivity;
 import com.somadtech.mrsushi.adapters.LocationsAdapter;
 import com.somadtech.mrsushi.adapters.ProductsAdapter;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -38,9 +47,10 @@ import java.util.ListIterator;
 public class LocationsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private LocationsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     MrSushiDbHelper mDbHelper;
+    List<Location> locations;
 
 
     private OnFragmentInteractionListener mListener;
@@ -124,10 +134,81 @@ public class LocationsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        List<Product> products = mDbHelper.getAllProducts();
+        locations = mDbHelper.getAllLocations();
 
         // specify an adapter (see also next example)
-        mAdapter = new LocationsAdapter(getContext(), products);
+        mAdapter = new LocationsAdapter(getContext(), locations);
         mRecyclerView.setAdapter(mAdapter);
     }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        MenuItem mSearchMenuItem = menu.findItem(R.id.action_search);
+        mSearchMenuItem.setVisible(true);
+        SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.location_toolbar);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.clear();
+        inflater.inflate(R.menu.main, menu);
+        final MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(((MainActivity) getContext()).getSupportActionBar().getThemedContext());
+
+        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setActionView(item, searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                final List<Location> filteredModelList = filter(locations, newText);
+
+                mAdapter.setFilter(filteredModelList);
+
+                return true;
+            }
+
+        });
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        // Detect SearchView icon clicks
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //setItemsVisibility(menu, item, false);
+            }
+        });
+        // Detect SearchView close
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                //setItemsVisibility(menu, item, true);
+                return false;
+            }
+        });
+    }
+    private List<Location> filter(List<Location> models, String query) {
+        query = query.toLowerCase();
+        final List<Location> filteredModelList = new ArrayList<>();
+        for (Location model : models) {
+            final String text = model.getName().toLowerCase();
+            if (text.contains(query)) {
+                filteredModelList.add(model);
+            }
+        }
+        return filteredModelList;
+    }
+
 }

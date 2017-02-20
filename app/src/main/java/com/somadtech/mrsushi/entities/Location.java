@@ -13,6 +13,7 @@ public class Location {
     private String latitude;
     private String longitude;
     private String image;
+    private String map_image;
 
     public int getId() {
         return id;
@@ -70,4 +71,11 @@ public class Location {
         this.slug = slug;
     }
 
+    public String getMap_image() {
+        return map_image;
+    }
+
+    public void setMap_image(String map_image) {
+        this.map_image = map_image;
+    }
 }

@@ -164,7 +164,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         mSearchMenuItem.setVisible(true);
         //SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Carrito");
+        toolbar.setTitle(R.string.cart_toolbar);
 
         return true;
     }

@@ -54,7 +54,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
-                    app:srcCompat="@drawable/cover"
+                    app:srcCompat="@drawable/staticmap"
                     android:id="@+id/backdrop"
                     android:layout_marginBottom="16dp"
                     android:scaleType="fitXY" />
@@ -110,7 +110,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    app:srcCompat="@drawable/album1"
+                    app:srcCompat="@drawable/staticmap"
                     android:id="@+id/imageView2"
                     android:scaleType="fitXY"
                     android:layout_height="400dp"

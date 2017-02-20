@@ -10,7 +10,9 @@ import android.util.Log;
 import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
+import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.entities.Promotion;
 import com.somadtech.mrsushi.entities.Variant;
 
 import java.util.ArrayList;
@@ -699,6 +701,22 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return 1;
     }
 
+    public int createProductPromotions(Promotion promotion){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        List<Product> triggers = promotion.getTrigger();
+
+        List<Product> targets = promotion.getTarget();
+
+        for (Product product: triggers) {
+            ContentValues values = new ContentValues();
+            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_INGREDIENT_ID, promotion.getId());
+            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
+            db.insertWithOnConflict(IngredientProductContract.IngredientProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+        return 1;
+    }
+
     public List<Ingredient> getIngredientsByProduct(int product_id){
         ArrayList<Cart> carts = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + IngredientProductContract.IngredientProductEntry.TABLE_NAME + " WHERE "
@@ -779,6 +797,148 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(IngredientContract.IngredientEntry.TABLE_NAME, values, IngredientContract.IngredientEntry._ID + " = ?",
                 new String[] { String.valueOf(ingredient.getId()) });
+    }
+
+    //endregion
+
+    //region Locations
+
+    public Location getLocation(int location_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + LocationContract.LocationEntry.TABLE_NAME + " WHERE "
+                + LocationContract.LocationEntry._ID + " = " + location_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return new Location();
+        }
+
+
+        Location location = new Location();
+        location.setId(c.getInt(c.getColumnIndex(LocationContract.LocationEntry._ID)));
+        location.setName(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_NAME)));
+        location.setDescription(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_DESC)));
+        location.setSlug(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_SLUG)));
+        location.setLatitude(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_LAT)));
+        location.setLongitude(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_LNG)));
+        location.setMap_image(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_MAP_IMAGE)));
+        location.setImage(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_IMAGE)));
+
+
+        return location;
+    }
+
+    public ArrayList<Location> getAllLocations() {
+        ArrayList<Location> locations = new ArrayList<>();
+        String selectQuery = "SELECT  * FROM " + LocationContract.LocationEntry.TABLE_NAME;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Location location = new Location();
+                location.setId(c.getInt(c.getColumnIndex(LocationContract.LocationEntry._ID)));
+                location.setName(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_NAME)));
+                location.setDescription(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_DESC)));
+                location.setSlug(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_SLUG)));
+                location.setLatitude(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_LAT)));
+                location.setLongitude(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_LNG)));
+                location.setMap_image(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_MAP_IMAGE)));
+                location.setImage(c.getString(c.getColumnIndex(LocationContract.LocationEntry.COLUMN_NAME_IMAGE)));
+
+                locations.add(location);
+            } while (c.moveToNext());
+        }
+
+        return locations;
+    }
+
+    public int createLocation(Location location){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(LocationContract.LocationEntry._ID, location.getId());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_NAME, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_DESC, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_SLUG, location.getSlug());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_LAT, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_LNG, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_MAP_IMAGE, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_IMAGE, location.getImage());
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(LocationContract.LocationEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updateLocation(location);
+        }
+        return id;
+    }
+
+    public int updateLocation(Location location){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_NAME, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_DESC, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_SLUG, location.getSlug());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_LAT, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_LNG, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_MAP_IMAGE, location.getName());
+        values.put(LocationContract.LocationEntry.COLUMN_NAME_IMAGE, location.getImage());
+
+        // updating row
+        return db.update(LocationContract.LocationEntry.TABLE_NAME, values, LocationContract.LocationEntry._ID + " = ?",
+                new String[] { String.valueOf(location.getId()) });
+    }
+
+    //endregion
+
+    //region Promotions
+
+
+    public int createPromotion(Promotion promotion){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PromotionContract.PromotionEntry._ID, promotion.getId());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_NAME, promotion.getName());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_SLUG, promotion.getSlug());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_DESC, promotion.getDescription());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_S, promotion.getImage_small());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_L, promotion.getImage_large());
+
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(ProductContract.ProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updatePromotion(promotion);
+        }
+        return id;
+    }
+
+    public int updatePromotion(Promotion promotion){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_NAME, promotion.getName());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_SLUG, promotion.getSlug());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_DESC, promotion.getDescription());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_S, promotion.getImage_small());
+        values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_L, promotion.getImage_large());
+
+        // updating row
+        return db.update(PromotionContract.PromotionEntry.TABLE_NAME, values, PromotionContract.PromotionEntry._ID + " = ?",
+                new String[] { String.valueOf(promotion.getId()) });
     }
 
     //endregion

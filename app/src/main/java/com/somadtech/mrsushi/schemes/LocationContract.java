@@ -16,6 +16,7 @@ public class LocationContract {
                     LocationEntry.COLUMN_NAME_SLUG + " TEXT," +
                     LocationEntry.COLUMN_NAME_LAT + " TEXT," +
                     LocationEntry.COLUMN_NAME_LNG + " TEXT," +
+                    LocationEntry.COLUMN_NAME_MAP_IMAGE + " TEXT," +
                     LocationEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
     static final String SQL_DELETE_LOCATIONS =
@@ -33,6 +34,7 @@ public class LocationContract {
         static final String COLUMN_NAME_SLUG = "slug";
         static final String COLUMN_NAME_LAT = "latitude";
         static final String COLUMN_NAME_LNG = "longitude";
+        static final String COLUMN_NAME_MAP_IMAGE = "map_image";
         static final String COLUMN_NAME_IMAGE = "image";
     }
 }

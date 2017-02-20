@@ -13,6 +13,7 @@ public class PromotionContract {
                     PromotionEntry._ID + " INTEGER PRIMARY KEY," +
                     PromotionEntry.COLUMN_NAME_NAME + " TEXT," +
                     PromotionEntry.COLUMN_NAME_SLUG + " TEXT," +
+                    PromotionEntry.COLUMN_NAME_DESC + " TEXT," +
                     PromotionEntry.COLUMN_NAME_IMAGE_S + " TEXT," +
                     PromotionEntry.COLUMN_NAME_IMAGE_L + " TEXT)";
 
@@ -28,6 +29,7 @@ public class PromotionContract {
         static final String TABLE_NAME = "promotions";
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_SLUG = "slug";
+        static final String COLUMN_NAME_DESC = "description";
         static final String COLUMN_NAME_IMAGE_S = "image_small";
         static final String COLUMN_NAME_IMAGE_L = "image_large";
     }

@@ -46,11 +46,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        if (savedInstanceState == null) {
-            int  fragment_id = getIntent().getIntExtra("fragment_id", 1);
-            onSectionAttached(fragment_id);
-        }
+        int  fragment_id = getIntent().getIntExtra("fragment_id", 1);
+        onSectionAttached(fragment_id);
+//        if (savedInstanceState == null) {
+//
+//        }
     }
 
     @Override
@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_new) {
             onSectionAttached(1);
         }
-
         else if(id == R.id.nav_locations ){
             onSectionAttached(2);
         }

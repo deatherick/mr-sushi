@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
 
@@ -45,9 +46,9 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
 
         try {
             Picasso.with(this)
-                    .load(R.drawable.cover)
-                    .placeholder(R.drawable.image1)
-                    .error(R.drawable.image1)
+                    .load(R.drawable.staticmap)
+                    .placeholder(R.drawable.staticmap)
+                    .error(R.drawable.staticmap)
                     .into((ImageView) findViewById(R.id.backdrop));
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,5 +99,11 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(LocationsActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 
 }

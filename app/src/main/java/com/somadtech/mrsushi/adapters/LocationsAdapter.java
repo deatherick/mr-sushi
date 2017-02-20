@@ -11,8 +11,10 @@ import android.widget.TextView;
 
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.LocationsActivity;
+import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.entities.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.ViewHolder>  {
 
-    private List<Product> productList;
+    private List<Location> locationList;
     private Context mContext;
 
     // Provide a reference to the views for each data item
@@ -40,8 +42,8 @@ public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.Vie
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public LocationsAdapter(Context mContext, List<Product> productList) {
-        this.productList = productList;
+    public LocationsAdapter(Context mContext, List<Location> locationList) {
+        this.locationList = locationList;
         this.mContext = mContext;
     }
 
@@ -60,7 +62,7 @@ public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.Vie
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mTextView.setText(productList.get(position).getName());
+        holder.mTextView.setText(locationList.get(position).getName());
         holder.btn_loc_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,6 +77,12 @@ public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.Vie
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return productList.size();
+        return locationList.size();
+    }
+
+    public void setFilter(List<Location> countryModels) {
+        locationList = new ArrayList<>();
+        locationList.addAll(countryModels);
+        notifyDataSetChanged();
     }
 }

@@ -15,7 +15,7 @@ import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
 
-public class OffersDetailActivity extends AppCompatActivity {
+public class PromotionsDetailActivity extends AppCompatActivity {
 
     MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
     TextView txtName;

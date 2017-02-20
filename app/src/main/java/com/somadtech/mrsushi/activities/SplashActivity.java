@@ -25,6 +25,7 @@ import com.somadtech.mrsushi.MySingleton;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
+import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.entities.Promotion;
@@ -97,6 +98,12 @@ public class SplashActivity extends AppCompatActivity {
                                 mDbHelper.createCategory(category);
                             }
 
+                            Type variantListType = new TypeToken<ArrayList<Variant>>(){}.getType();
+                            List<Variant> variantsListObject = gson.fromJson(obj.getJSONArray("Variants").toString(), variantListType);
+                            for (Variant variant: variantsListObject) {
+                                mDbHelper.createVariant(variant);
+                            }
+
                             Type productListType = new TypeToken<ArrayList<Product>>(){}.getType();
                             List<Product> productsListObject = gson.fromJson(obj.getJSONArray("Products").toString(), productListType);
                             for (Product product: productsListObject) {
@@ -109,11 +116,13 @@ public class SplashActivity extends AppCompatActivity {
                                 mDbHelper.createIngredient(ingredient);
                             }
 
-                            Type variantListType = new TypeToken<ArrayList<Variant>>(){}.getType();
-                            List<Variant> variantsListObject = gson.fromJson(obj.getJSONArray("Variants").toString(), variantListType);
-                            for (Variant variant: variantsListObject) {
-                                mDbHelper.createVariant(variant);
+                            Type locationListType = new TypeToken<ArrayList<Location>>(){}.getType();
+                            List<Location> locationListObject = gson.fromJson(obj.getJSONArray("Locations").toString(), locationListType);
+                            for (Location location: locationListObject) {
+                                mDbHelper.createLocation(location);
                             }
+
+
 
 //                            Type promotionListType = new TypeToken<ArrayList<Promotion>>(){}.getType();
 //                            List<Promotion> promotionsListObject = gson.fromJson(obj.getJSONArray("Promotions").toString(), promotionListType);

@@ -81,6 +81,9 @@ public class VariantsAdapter extends RecyclerView.Adapter<VariantsAdapter.MyView
     }
 
     public Variant getItem(int position) {
+        if(variantList.size() == 0){
+            return new Variant();
+        }
         return variantList.get(position);
     }
 }

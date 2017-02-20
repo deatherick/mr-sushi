@@ -13,6 +13,8 @@
     <string name="backdrop_subtitle">This season top 20 albums</string>
     <string name="category_toolbar">Categorías</string>
     <string name="products_toolbar">Productos</string>
+    <string name="location_toolbar">Ubicaciones</string>
+    <string name="cart_toolbar">Orden</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

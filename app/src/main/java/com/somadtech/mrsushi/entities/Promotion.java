@@ -1,5 +1,7 @@
 package com.somadtech.mrsushi.entities;
 
+import java.util.List;
+
 /**
  * Created by smt on 2/15/17.
  * Project: mrsushi-android
@@ -13,6 +15,8 @@ public class Promotion {
     private String description;
     private String image_small;
     private String image_large;
+    private List<Product> trigger;
+    private List<Product> target;
 
     public int getId() {
         return id;
@@ -60,5 +64,21 @@ public class Promotion {
 
     public void setImage_large(String image_large) {
         this.image_large = image_large;
+    }
+
+    public List<Product> getTrigger() {
+        return trigger;
+    }
+
+    public void setTrigger(List<Product> trigger) {
+        this.trigger = trigger;
+    }
+
+    public List<Product> getTarget() {
+        return target;
+    }
+
+    public void setTarget(List<Product> target) {
+        this.target = target;
     }
 }
