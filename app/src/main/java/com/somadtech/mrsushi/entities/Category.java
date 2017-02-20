@@ -1,5 +1,7 @@
 package com.somadtech.mrsushi.entities;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by smt on 28/01/17.
  * Project Name: Mrsushi
@@ -7,9 +9,11 @@ package com.somadtech.mrsushi.entities;
 
 public class Category {
 
-
+    @SerializedName("id")
     private int itemId;
+    @SerializedName("name")
     private String itemName;
+    @SerializedName("image")
     private String itemImage;
     private String slug;
 

@@ -404,6 +404,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(ProductContract.ProductEntry.COLUMN_NAME_CAT, product.getCategory().getItemId());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_SLUG, product.getSlug());
         createIngredientsByProduct(product, product.getIngredients());
+        createVariantsByProduct(product, product.getVariants());
         // insert row
 
         int id = (int) db.insertWithOnConflict(ProductContract.ProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
@@ -534,6 +535,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(ProductContract.ProductEntry.COLUMN_NAME_CAT, product.getCategory().getItemId());
         values.put(ProductContract.ProductEntry.COLUMN_NAME_SLUG, product.getSlug());
         createIngredientsByProduct(product, product.getIngredients());
+        createVariantsByProduct(product, product.getVariants());
 
         // updating row
         return db.update(ProductContract.ProductEntry.TABLE_NAME, values, ProductContract.ProductEntry._ID + " = ?",
@@ -670,6 +672,15 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         variant.setSlug(c.getString(c.getColumnIndex(VariantContract.VariantEntry.COLUMN_NAME_SLUG)));
 
         return variant;
+    }
+
+    public long createVariantsByProduct(Product product, List<Variant> variants) {
+        for (Variant variant: variants) {
+            variant.setProduct_id(product.getId());
+            createVariant(variant);
+        }
+
+        return 1;
     }
     //endregion
 
