@@ -23,6 +23,7 @@
 
             <ImageView
                 android:id="@+id/cart_label_img"
+                android:visibility="gone"
                 android:src="@drawable/ic_label"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="100dp"

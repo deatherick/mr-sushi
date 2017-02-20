@@ -90,10 +90,10 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
         values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
 
-        // insert row
+        // insert rowste
         int id;
         if(cart.getObservations().equals("")){
-            Cart productInCart = checkProductInCart(product.getId());
+            Cart productInCart = checkProductInCart(product.getId(), variant.getId());
             if(productInCart != null){
                 id = addProductToCart(productInCart.getId());
             } else {
@@ -117,11 +117,12 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return updateCart(cart);
     }
 
-    private Cart checkProductInCart(long product_id){
+    private Cart checkProductInCart(long product_id, int variant_id){
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
-                + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + product_id;
+                + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + product_id + " AND "
+                + CartContract.CartEntry.COLUMN_NAME_VARIANT + " = " + variant_id;
 
         Log.e(LOG, selectQuery);
 
@@ -737,6 +738,38 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         return ingredient;
     }
+
+    public int createIngredient(Ingredient ingredient){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(IngredientContract.IngredientEntry._ID, ingredient.getId());
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_NAME, ingredient.getName());
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_IMAGE, ingredient.getImage());
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_SLUG, ingredient.getSlug());
+
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(IngredientContract.IngredientEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updateIngredient(ingredient);
+        }
+        return id;
+    }
+
+    public int updateIngredient(Ingredient ingredient){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_NAME, ingredient.getName());
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_IMAGE, ingredient.getImage());
+        values.put(IngredientContract.IngredientEntry.COLUMN_NAME_SLUG, ingredient.getSlug());
+
+        // updating row
+        return db.update(IngredientContract.IngredientEntry.TABLE_NAME, values, IngredientContract.IngredientEntry._ID + " = ?",
+                new String[] { String.valueOf(ingredient.getId()) });
+    }
+
     //endregion
 
 }

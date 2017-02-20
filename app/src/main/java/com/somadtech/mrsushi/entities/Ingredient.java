@@ -16,8 +16,11 @@ public  class Ingredient {
 
     }
 
-    public Ingredient(int id){
+    public Ingredient(int id, String name, String slug, String image){
         this.id = id;
+        this.name = name;
+        this.slug = slug;
+        this.image =  image;
     }
 
     public int getId() {

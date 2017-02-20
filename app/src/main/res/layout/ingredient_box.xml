@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:orientation="horizontal"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical|center_horizontal">
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="7dip"
+        android:padding="2dip" >
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        custom:srcCompat="@drawable/album8"
+        android:id="@+id/imgIngredient"
+        android:layout_weight="1" />
+    </LinearLayout>
+    <com.somadtech.mrsushi.font.MontserratTextView
+        custom:typeface="montserratSemiBold"
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtIngredientName"
+        android:layout_weight="1"
+        android:textColor="@color/ingredient_text" />
+</LinearLayout>

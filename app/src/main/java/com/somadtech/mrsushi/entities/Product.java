@@ -72,9 +72,7 @@ public class Product {
 
     @SuppressLint("DefaultLocale")
     public String getOriginalPrice() {
-        //DecimalFormat df2 = new DecimalFormat(".##");
         return String.format("%.2f", originalPrice);
-        //return df2.format(originalPrice);
     }
 
     public void setOriginalPrice(double originalPrice) {

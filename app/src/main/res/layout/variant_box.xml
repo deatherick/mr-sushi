@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal|center"
+    android:orientation="vertical"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_vertical|center_horizontal|fill_horizontal">
+    <LinearLayout
+        android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="7dip"
+        android:padding="2dip"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:buttonTint="@color/colorPrimaryDark"
+            android:id="@+id/radioVariant"
+            android:layout_weight="1"
+            android:gravity="center_vertical|center_horizontal|center"
+            android:layout_marginLeft="10dp" />
+
+
+        <com.somadtech.mrsushi.font.MontserratTextView
+            custom:typeface="montserratSemiBold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/colorPrimaryDark"
+            android:id="@+id/txtVariantPrice"
+            android:text="Q5991.00" />
+    </LinearLayout>
+    <com.somadtech.mrsushi.font.MontserratTextView
+        custom:typeface="montserratSemiBold"
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtVariantName"
+        android:layout_weight="1"
+        android:textColor="@color/colorPrimaryDark" />
+</LinearLayout>

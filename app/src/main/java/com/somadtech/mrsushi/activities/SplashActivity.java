@@ -24,7 +24,9 @@ import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.MySingleton;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import org.json.JSONException;
@@ -96,6 +98,16 @@ public class SplashActivity extends AppCompatActivity {
                         }
                         String[] covers = new String[]{
                                 "http://logok.org/wp-content/uploads/2014/04/Apple-Logo-black.png"};
+
+                        mDbHelper.createIngredient(new Ingredient(1, "Atun", "atun", covers[0]));
+                        mDbHelper.createIngredient(new Ingredient(2, "Pescado", "pescado", covers[0]));
+                        mDbHelper.createIngredient(new Ingredient(3, "Aguacate con aguacate y mas", "aguacate", covers[0]));
+                        mDbHelper.createIngredient(new Ingredient(4, "Pulpo", "pulpo", covers[0]));
+
+                        mDbHelper.createVariant(new Variant(1, 1, "Camarón", 51, covers[0]));
+                        mDbHelper.createVariant(new Variant(2, 1, "Cangrego", 51, covers[0]));
+                        mDbHelper.createVariant(new Variant(3, 1, "Salmón", 67, covers[0]));
+                        mDbHelper.createVariant(new Variant(4, 1, "Vegetariano", 45, covers[0]));
 
                         // Insert the new row, returning the primary key value of the new row
                         long newRowId = mDbHelper.createCategory(new Category(1, "Ensaladas y entradas", covers[0]));

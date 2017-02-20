@@ -1,5 +1,7 @@
 package com.somadtech.mrsushi.entities;
 
+import android.annotation.SuppressLint;
+
 /**
  * Created by smt on 2/6/17.
  * Project: mrsushi-android
@@ -20,6 +22,14 @@ public class Variant {
         this.name = "";
         this.price = 0;
         this.slug = "";
+    }
+
+    public Variant(int id, int product_id, String name, double price, String image){
+        this.id = id;
+        this.product_id =  product_id;
+        this.name = name;
+        this.price = price;
+        this.image = image;
     }
 
     public int getId() {
@@ -46,8 +56,9 @@ public class Variant {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
+    @SuppressLint("DefaultLocale")
+    public String getPrice() {
+        return String.format("%.2f", price);
     }
 
     public void setPrice(double price) {

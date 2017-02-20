@@ -22,41 +22,40 @@ import java.util.List;
 
 public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.MyViewHolder> {
     private Context mContext;
-    private List<Ingredient> productList;
+    private List<Ingredient> ingredientList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView title;
+        TextView name;
         ImageView thumbnail;
-        //Button button_product_detail;
-        Ingredient product;
+        Ingredient ingredient;
 
         MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            name = (TextView) view.findViewById(R.id.txtIngredientName);
+            thumbnail = (ImageView) view.findViewById(R.id.imgIngredient);
         }
     }
 
-    public IngredientsAdapter(Context mContext, List<Ingredient> productList) {
+    public IngredientsAdapter(Context mContext, List<Ingredient> ingredientList) {
         this.mContext = mContext;
-        this.productList = productList;
+        this.ingredientList = ingredientList;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.product_card, parent, false);
+                .inflate(R.layout.ingredient_box, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Ingredient product = productList.get(position);
-        holder.title.setText(product.getName());
-        holder.product = product;
+        Ingredient ingredient = ingredientList.get(position);
+        holder.name.setText(ingredient.getName());
+        holder.ingredient = ingredient;
         Picasso.with(mContext)
-                .load(productList.get(position).getImage())
+                .load(ingredientList.get(position).getImage())
                 .placeholder(R.drawable.image1)
                 .error(R.drawable.image1)
                 .into(holder.thumbnail);
@@ -64,12 +63,12 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return ingredientList.size();
     }
 
-    public void setFilter(List<Ingredient> countryModels) {
-        productList = new ArrayList<>();
-        productList.addAll(countryModels);
+    public void setFilter(List<Ingredient> ingredientModels) {
+        ingredientList = new ArrayList<>();
+        ingredientList.addAll(ingredientModels);
         notifyDataSetChanged();
     }
 }
