@@ -91,6 +91,9 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         if (!category_slug.equals("")) {
             int category_id = mDbHelper.getCategoryId(category_slug);
             if(category_id != 0){
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                Category category = mDbHelper.getCategory(category_id);
+                toolbar.setTitle(category.getItemName());
                 productList = mDbHelper.getProductsByCategory(category_id);
             } else {
                 productList = mDbHelper.getAllProducts();
