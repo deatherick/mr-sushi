@@ -122,7 +122,11 @@ public class SplashActivity extends AppCompatActivity {
                                 mDbHelper.createLocation(location);
                             }
 
-
+                            Type promotionsListType = new TypeToken<ArrayList<Promotion>>(){}.getType();
+                            List<Promotion> promotionListObject = gson.fromJson(obj.getJSONArray("Promotions").toString(), promotionsListType);
+                            for (Promotion promotion: promotionListObject) {
+                                mDbHelper.createPromotion(promotion);
+                            }
 
 //                            Type promotionListType = new TypeToken<ArrayList<Promotion>>(){}.getType();
 //                            List<Promotion> promotionsListObject = gson.fromJson(obj.getJSONArray("Promotions").toString(), promotionListType);

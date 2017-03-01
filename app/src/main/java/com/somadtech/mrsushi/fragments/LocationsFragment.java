@@ -1,10 +1,8 @@
 package com.somadtech.mrsushi.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,24 +15,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
-import com.somadtech.mrsushi.activities.ProductListActivity;
 import com.somadtech.mrsushi.adapters.LocationsAdapter;
-import com.somadtech.mrsushi.adapters.ProductsAdapter;
-import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Location;
-import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * A simple {@link Fragment} subclass.

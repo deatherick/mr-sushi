@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.LocationsActivity;
 import com.somadtech.mrsushi.entities.Location;
-import com.somadtech.mrsushi.entities.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +35,13 @@ public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.Vie
         // each data item is just a string in this case
         public TextView mTextView;
         public Button btn_loc_detail;
+        public Location pLocation;
+        public ImageView pImage;
         public ViewHolder(View view) {
             super(view);
             mTextView = (TextView) view.findViewById(R.id.location_name);
             btn_loc_detail = (Button) view.findViewById(R.id.btn_loc_detail);
+            pImage = (ImageView) view.findViewById(R.id.location_row_image);
         }
     }
 
@@ -59,18 +63,30 @@ public class LocationsAdapter  extends RecyclerView.Adapter<LocationsAdapter.Vie
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
+        holder.pLocation = locationList.get(position);
         holder.mTextView.setText(locationList.get(position).getName());
         holder.btn_loc_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, LocationsActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("location_id", holder.pLocation.getId());
                 mContext.startActivity(intent);
             }
         });
+
+        try {
+            Picasso.with(mContext)
+                    .load(holder.pLocation.getImage())
+                    .placeholder(R.drawable.staticmap)
+                    .error(R.drawable.staticmap)
+                    .into(holder.pImage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

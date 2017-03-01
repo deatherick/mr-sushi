@@ -45,6 +45,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         // Pivot tables
         db.execSQL(IngredientProductContract.SQL_CREATE_INGREDIENT_PRODUCT);
+        db.execSQL(ProductPromotionsContract.SQL_CREATE_PRODUCT_PROMOTIONS);
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -60,6 +61,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         //Pivot tables
         db.execSQL(IngredientProductContract.SQL_DELETE_INGREDIENT_PRODUCT);
+        db.execSQL(ProductPromotionsContract.SQL_DELETE_PRODUCT_PROMOTIONS);
         onCreate(db);
     }
 
@@ -710,9 +712,18 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         for (Product product: triggers) {
             ContentValues values = new ContentValues();
-            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_INGREDIENT_ID, promotion.getId());
-            values.put(IngredientProductContract.IngredientProductEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
-            db.insertWithOnConflict(IngredientProductContract.IngredientProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_TYPE, ProductPromotionsContract.ProductPromotionsEntry.TRIGGER);
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID, promotion.getId());
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
+            db.insertWithOnConflict(ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
+
+        for (Product product: targets) {
+            ContentValues values = new ContentValues();
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_TYPE, ProductPromotionsContract.ProductPromotionsEntry.TARGET);
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID, promotion.getId());
+            values.put(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PRODUCT_ID, product.getId());
+            db.insertWithOnConflict(ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         }
         return 1;
     }
@@ -738,6 +749,77 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         return ingredients;
     }
+
+    protected String getFilter(List<Product> products){
+        //The string builder used to construct the string
+        StringBuilder commaSepValueBuilder = new StringBuilder();
+
+        //Looping through the list
+        for ( int i = 0; i< products.size(); i++){
+            //append the value into the builder
+            commaSepValueBuilder.append(products.get(i).getId());
+
+            //if the value is not the last element of the list
+            //then append the comma(,) as well
+            if ( i != products.size()-1){
+                commaSepValueBuilder.append(", ");
+            }
+        }
+        return commaSepValueBuilder.toString();
+
+
+    }
+
+    public List<Promotion> getPromotionsByProductsTrigger(List<Product> products){
+        List<Promotion> promotions = new ArrayList<>();
+        if(products.size() == 0){
+            return promotions;
+        }
+        String filter = getFilter(products);
+
+        String selectQuery = "SELECT DISTINCT "+ ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID +" FROM " +
+                ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME + " WHERE " +
+                ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PRODUCT_ID +" IN ("+ filter +")";
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                int promotion_id = c.getInt(c.getColumnIndex(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID));
+                Promotion promotion = getPromotion(promotion_id);
+                promotions.add(promotion);
+            } while (c.moveToNext());
+        }
+
+        return promotions;
+    }
+
+    public List<Product> getProductsTargetByPromotion(int promotion_id){
+        ArrayList<Product> products = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME + " WHERE " +
+                ProductPromotionsContract.ProductPromotionsEntry._ID + " = " + promotion_id + " AND " +
+                ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_TYPE + " = '" + ProductPromotionsContract.ProductPromotionsEntry.TARGET+"'";
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                int product_id = c.getInt((c.getColumnIndex(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PRODUCT_ID)));
+                Product product = getProduct(product_id);
+                products.add(product);
+            } while (c.moveToNext());
+        }
+        return products;
+    }
+
     //endregion
 
     //region Ingredients
@@ -905,6 +987,34 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
     //region Promotions
 
+    public Promotion getPromotion(int promotion_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + PromotionContract.PromotionEntry.TABLE_NAME + " WHERE "
+                + PromotionContract.PromotionEntry._ID + " = " + promotion_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return new Promotion();
+        }
+
+
+        Promotion promotion = new Promotion();
+        promotion.setId(c.getInt(c.getColumnIndex(PromotionContract.PromotionEntry._ID)));
+        promotion.setName(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_NAME)));
+        promotion.setSlug(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_SLUG)));
+        promotion.setDescription(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_DESC)));
+        promotion.setImage_small(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_S)));
+        promotion.setImage_large(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_L)));
+        promotion.setTarget(getProductsTargetByPromotion(promotion_id));
+
+        return promotion;
+    }
 
     public int createPromotion(Promotion promotion){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -919,10 +1029,12 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         // insert row
 
-        int id = (int) db.insertWithOnConflict(ProductContract.ProductEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        int id = (int) db.insertWithOnConflict(PromotionContract.PromotionEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         if (id == -1) {
             id = updatePromotion(promotion);
         }
+        promotion.setId(id);
+        createProductPromotions(promotion);
         return id;
     }
 
@@ -935,7 +1047,6 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(PromotionContract.PromotionEntry.COLUMN_NAME_DESC, promotion.getDescription());
         values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_S, promotion.getImage_small());
         values.put(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_L, promotion.getImage_large());
-
         // updating row
         return db.update(PromotionContract.PromotionEntry.TABLE_NAME, values, PromotionContract.PromotionEntry._ID + " = ?",
                 new String[] { String.valueOf(promotion.getId()) });

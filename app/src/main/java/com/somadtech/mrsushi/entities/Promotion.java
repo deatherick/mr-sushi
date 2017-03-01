@@ -15,6 +15,7 @@ public class Promotion {
     private String description;
     private String image_small;
     private String image_large;
+    private String type;
     private List<Product> trigger;
     private List<Product> target;
 
@@ -80,5 +81,13 @@ public class Promotion {
 
     public void setTarget(List<Product> target) {
         this.target = target;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

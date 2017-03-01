@@ -24,7 +24,7 @@
             android:padding="2dip" >
 
             <ImageView
-                android:id="@+id/list_image"
+                android:id="@+id/location_row_image"
                 android:layout_width="70dip"
                 android:layout_height="70dip"
                 android:src="@drawable/image1" />

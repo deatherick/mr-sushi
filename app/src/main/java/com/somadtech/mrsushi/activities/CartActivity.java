@@ -24,6 +24,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.somadtech.mrsushi.adapters.PromotionsViewPagerAdapter;
+import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.entities.Promotion;
 import com.somadtech.mrsushi.fragments.EmptyCartDialogFragment;
 import com.somadtech.mrsushi.helpers.CartClickListener;
 import com.somadtech.mrsushi.MainActivity;
@@ -32,6 +34,9 @@ import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.adapters.CartAdapter;
 import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, EmptyCartDialogFragment.NoticeDialogListener, CartClickListener, ViewPager.OnPageChangeListener, View.OnClickListener {
 
@@ -47,6 +52,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
     private int dotsCount;
     private ImageView[] dots;
     private PromotionsViewPagerAdapter mAdapter;
+    private List<Promotion> promotion_list;
 
     private int[] mImageResources = {
             R.drawable.sopas,
@@ -60,10 +66,19 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+        mDbHelper = new MrSushiDbHelper(this);
+        ArrayList<Cart> cart_rows = mDbHelper.getAllCart();
+        ArrayList<Product> product_rows = new ArrayList<>();
+
+        for (Cart cart: cart_rows) {
+            product_rows.add(cart.getProduct());
+        }
+        promotion_list = mDbHelper.getPromotionsByProductsTrigger(product_rows);
+
         setReference();
         //super.onCreate();
-        mDbHelper = new MrSushiDbHelper(this);
-        adapter = new CartAdapter(this, mDbHelper.getAllCart());
+
+        adapter = new CartAdapter(this, cart_rows);
 
         updateListView(adapter);
 
@@ -268,7 +283,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
 
         pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
 
-        mAdapter = new PromotionsViewPagerAdapter(CartActivity.this, mImageResources);
+        mAdapter = new PromotionsViewPagerAdapter(CartActivity.this, promotion_list);
         intro_images.setAdapter(mAdapter);
         intro_images.setCurrentItem(0);
         intro_images.setOnPageChangeListener(this);
@@ -293,8 +308,9 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
 
             pager_indicator.addView(dots[i], params);
         }
-
-        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        if(dotsCount > 0){
+            dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
+        }
     }
 
 

@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
@@ -24,6 +25,7 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
     private ActionBarDrawerToggle drawerToggle;
     DrawerLayout drawer;
     MrSushiDbHelper mDbHelper;
+    TextView txtLocationName, txtLocationDesc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +44,33 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mDbHelper = new MrSushiDbHelper(this);
+        txtLocationName = (TextView) findViewById(R.id.txtLocationName);
+        txtLocationDesc = (TextView) findViewById(R.id.txtLocationDesc);
 
+        mDbHelper = new MrSushiDbHelper(this);
+        int location_id = getIntent().getIntExtra("location_id", 1);
+
+        Location location = mDbHelper.getLocation(location_id);
+        load_location(location);
+
+    }
+
+    private void load_location(Location location){
         try {
+            txtLocationName.setText(location.getName());
+            txtLocationDesc.setText(location.getDescription());
+
             Picasso.with(this)
-                    .load(R.drawable.staticmap)
+                    .load(location.getImage())
                     .placeholder(R.drawable.staticmap)
                     .error(R.drawable.staticmap)
-                    .into((ImageView) findViewById(R.id.backdrop));
+                    .into((ImageView) findViewById(R.id.location_image));
+
+            Picasso.with(this)
+                    .load(location.getMap_image())
+                    .placeholder(R.drawable.staticmap)
+                    .error(R.drawable.staticmap)
+                    .into((ImageView) findViewById(R.id.map_image));
         } catch (Exception e) {
             e.printStackTrace();
         }

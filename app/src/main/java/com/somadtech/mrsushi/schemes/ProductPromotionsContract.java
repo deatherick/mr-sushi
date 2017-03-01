@@ -31,6 +31,9 @@ public class ProductPromotionsContract {
         static final String COLUMN_NAME_TYPE =  "type";
         static final String COLUMN_NAME_PROMOTION_ID = "promotion_id";
         static final String COLUMN_NAME_PRODUCT_ID = "product_id";
+
+        static final String TRIGGER = "TRIGGER";
+        static final String TARGET = "TARGET";
     }
 }
 

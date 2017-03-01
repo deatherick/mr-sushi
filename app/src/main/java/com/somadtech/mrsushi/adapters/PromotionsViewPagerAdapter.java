@@ -12,6 +12,10 @@ import android.widget.LinearLayout;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.PromotionsDetailActivity;
 import com.somadtech.mrsushi.entities.Cart;
+import com.somadtech.mrsushi.entities.Promotion;
+import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 /**
  * Created by smt on 2/14/17.
@@ -20,17 +24,16 @@ import com.somadtech.mrsushi.entities.Cart;
 
 public class PromotionsViewPagerAdapter extends PagerAdapter {
     private Context mContext;
-    private int[] mResources;
-    private Cart cart;
+    private List<Promotion> mResources;
 
-    public PromotionsViewPagerAdapter(Context mContext, int[] mResources) {
+    public PromotionsViewPagerAdapter(Context mContext, List<Promotion> mResources) {
         this.mContext = mContext;
         this.mResources = mResources;
     }
 
     @Override
     public int getCount() {
-        return mResources.length;
+        return mResources.size();
     }
 
     @Override
@@ -43,7 +46,11 @@ public class PromotionsViewPagerAdapter extends PagerAdapter {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.pager_item, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.img_pager_item);
-        imageView.setImageResource(mResources[position]);
+        Picasso.with(mContext)
+                .load(mResources.get(position).getImage_small())
+                .placeholder(R.drawable.staticmap)
+                .error(R.drawable.staticmap)
+                .into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, PromotionsDetailActivity.class);
