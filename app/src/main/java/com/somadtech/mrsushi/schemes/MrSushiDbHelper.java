@@ -27,7 +27,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     private static final String LOG = "MrSushiDbHelper";
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "MrSushi.db";
 
     public MrSushiDbHelper(Context context) {
@@ -92,6 +92,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS, cart.getObservations());
         values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
         values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
+        values.put(CartContract.CartEntry.COLUMN_NAME_PROM_PROD, cart.getPromotion_product());
         values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
 
         // insert rowste
@@ -145,6 +146,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
         cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
         cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+        cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
         cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
 
         return cart;
@@ -178,6 +180,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
         cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
         cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+        cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
         cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
 
         return cart;
@@ -205,6 +208,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
                 cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
                 cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+                cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
                 cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
 
                 carts.add(cart);
@@ -230,6 +234,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS, cart.getObservations());
         values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
         values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
+        values.put(CartContract.CartEntry.COLUMN_NAME_PROM_PROD, cart.getPromotion_product());
         values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
 
         // updating row
@@ -690,6 +695,12 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
     //region Pivot
 
+    public void truncatePivotTables(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(IngredientProductContract.SQL_TRUNCATE_INGREDIENT_PRODUCT);
+        db.execSQL(ProductPromotionsContract.SQL_TRUNCATE_PRODUCT_PROMOTIONS);
+    }
+
     public long createIngredientsByProduct(Product product, List<Ingredient> ingredients) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -801,7 +812,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     public List<Product> getProductsTargetByPromotion(int promotion_id){
         ArrayList<Product> products = new ArrayList<>();
         String selectQuery = "SELECT * FROM " + ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME + " WHERE " +
-                ProductPromotionsContract.ProductPromotionsEntry._ID + " = " + promotion_id + " AND " +
+                ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID + " = " + promotion_id + " AND " +
                 ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_TYPE + " = '" + ProductPromotionsContract.ProductPromotionsEntry.TARGET+"'";
 
         Log.e(LOG, selectQuery);

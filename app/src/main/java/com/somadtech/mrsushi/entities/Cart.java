@@ -14,6 +14,7 @@ public class Cart {
     private String observations;
     private int state;
     private int quantity;
+    private int promotion_product;
 
     public Cart(){
 
@@ -26,6 +27,7 @@ public class Cart {
         this.order_id = 0;
         this.state = 1;
         this.quantity = 1;
+        this.promotion_product = 0;
     }
 
     public int getId() {
@@ -84,4 +86,11 @@ public class Cart {
         this.quantity = quantity;
     }
 
+    public int getPromotion_product() {
+        return promotion_product;
+    }
+
+    public void setPromotion_product(int promotion_product) {
+        this.promotion_product = promotion_product;
+    }
 }

@@ -92,6 +92,8 @@ public class SplashActivity extends AppCompatActivity {
                         try {
                             JSONObject obj = new JSONObject(response);
 
+                            mDbHelper.truncatePivotTables();
+
                             Type categoryListType = new TypeToken<ArrayList<Category>>(){}.getType();
                             List<Category> categoriesListObject = gson.fromJson(obj.getJSONArray("Categories").toString(), categoryListType);
                             for (Category category: categoriesListObject) {

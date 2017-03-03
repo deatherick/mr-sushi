@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.entities.Promotion;
 import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
@@ -24,14 +25,16 @@ public class PromotionsDetailActivity extends AppCompatActivity {
     EditText observations_text;
     ImageView imgProduct;
     Product product;
+    Promotion promotion;
     Variant variant;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.offers_detail);
-        int  product_id = getIntent().getIntExtra("product_id", 1);
+        int  promotion_id = getIntent().getIntExtra("promotion_id", 1);
 
-        product = mDbHelper.getProduct(product_id);
+        promotion = mDbHelper.getPromotion(promotion_id);
+        product = promotion.getTarget().get(0);
 
         variant = new Variant();
 
@@ -42,7 +45,7 @@ public class PromotionsDetailActivity extends AppCompatActivity {
 
         txtName.setText(product.getName());
         txtDesc.setText(product.getDescription());
-        txtPrice.setText("Q."+product.getOriginalPrice());
+        txtPrice.setText("Q." + product.getOriginalPrice());
         Picasso.with(this)
                 .load(product.getFull_image())
                 .placeholder(R.drawable.image1)
@@ -53,10 +56,9 @@ public class PromotionsDetailActivity extends AppCompatActivity {
 
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                observations_text = (EditText) findViewById(R.id.observations_text);
-//                String observations = observations_text.getText().toString();
-//                Cart cart = new Cart(product, variant, observations);
-//                mDbHelper.createCart(cart);
+                Cart cart = new Cart(product, variant, "");
+                cart.setPromotion_product(1);
+                mDbHelper.createCart(cart);
                 finish();
             }
         });

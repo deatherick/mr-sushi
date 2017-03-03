@@ -16,6 +16,7 @@ public class CartContract {
                     CartEntry.COLUMN_NAME_OBSERVATIONS + " TEXT," +
                     CartEntry.COLUMN_NAME_ORDER + " INTEGER," +
                     CartEntry.COLUMN_NAME_QTY + " INTEGER," +
+                    CartEntry.COLUMN_NAME_PROM_PROD + " INTEGER," +
                     CartEntry.COLUMN_NAME_STATE + " TEXT)";
 
     static final String SQL_DELETE_CART =
@@ -33,6 +34,7 @@ public class CartContract {
         static final String COLUMN_NAME_OBSERVATIONS = "observations";
         static final String COLUMN_NAME_ORDER = "order_id";
         static final String COLUMN_NAME_QTY = "quantity";
+        static final String COLUMN_NAME_PROM_PROD = "promotion_product";
         static final String COLUMN_NAME_STATE = "state";
     }
 }

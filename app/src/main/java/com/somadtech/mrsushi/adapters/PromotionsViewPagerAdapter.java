@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.PromotionsDetailActivity;
-import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Promotion;
 import com.squareup.picasso.Picasso;
 
@@ -42,7 +41,7 @@ public class PromotionsViewPagerAdapter extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         View itemView = LayoutInflater.from(mContext).inflate(R.layout.pager_item, container, false);
 
         ImageView imageView = (ImageView) itemView.findViewById(R.id.img_pager_item);
@@ -55,7 +54,7 @@ public class PromotionsViewPagerAdapter extends PagerAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, PromotionsDetailActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                intent.putExtra("product_id", 1);
+                intent.putExtra("promotion_id", mResources.get(position).getId());
                 mContext.startActivity(intent);
             }
         });

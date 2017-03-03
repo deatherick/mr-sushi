@@ -19,6 +19,9 @@ public class IngredientProductContract {
     static final String SQL_DELETE_INGREDIENT_PRODUCT =
             "DROP TABLE IF EXISTS " + IngredientProductEntry.TABLE_NAME;
 
+    static final String SQL_TRUNCATE_INGREDIENT_PRODUCT =
+            "DELETE FROM " + IngredientProductEntry.TABLE_NAME;
+
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
     private IngredientProductContract() {}

@@ -17,6 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import static com.somadtech.mrsushi.R.id.cart_label_img;
 import static com.somadtech.mrsushi.R.id.cart_minus_img;
 import static com.somadtech.mrsushi.R.id.cart_plus_img;
 import static com.somadtech.mrsushi.R.id.cart_product_quantity;
@@ -38,14 +39,14 @@ public class CartAdapter extends ArrayAdapter<Cart> {
     public Context myContext;
     private CartClickListener mCartClickListener;
 
-    public CartAdapter(Context context, ArrayList<Cart> users) {
-        super(context, 0, users);
+    public CartAdapter(Context context, ArrayList<Cart> cart_rows) {
+        super(context, 0, cart_rows);
         try {
             mCartClickListener = (CartClickListener) context;
         } catch(ClassCastException e){
             throw new ClassCastException(context + " must implements CartClickListener");
         }
-        this.cartArrayList = users;
+        this.cartArrayList = cart_rows;
         this.myContext = context;
     }
 
@@ -59,7 +60,7 @@ public class CartAdapter extends ArrayAdapter<Cart> {
         ImageView cart_plus_img;
         ImageView cart_minus_img;
         ImageView cart_remove_img;
-
+        ImageView cart_label_img;
     }
 
     @Override
@@ -94,6 +95,7 @@ public class CartAdapter extends ArrayAdapter<Cart> {
             holder.cart_plus_img = (ImageView) convertView.findViewById(cart_plus_img);
             holder.cart_minus_img = (ImageView) convertView.findViewById(cart_minus_img);
             holder.cart_remove_img = (ImageView) convertView.findViewById(cart_remove_img);
+            holder.cart_label_img = (ImageView) convertView.findViewById(cart_label_img);
             convertView.setTag(holder);
             //TextView txtCatName = (TextView) convertView.findViewById(txtCatName);
         } else {
@@ -127,6 +129,20 @@ public class CartAdapter extends ArrayAdapter<Cart> {
                 mCartClickListener.onRemoveClickListener(cartArrayList.get(position).getId());
             }
         });
+
+        Cart cart = (Cart) getItem(position);
+        assert cart != null;
+        if(cart.getPromotion_product() == 1){
+            holder.cart_label_img.setVisibility(View.VISIBLE);
+            holder.cart_minus_img.setVisibility(View.GONE);
+            holder.cart_plus_img.setVisibility(View.GONE);
+            holder.cart_product_quantity.setVisibility(View.GONE);
+        } else {
+            holder.cart_label_img.setVisibility(View.GONE);
+            holder.cart_minus_img.setVisibility(View.VISIBLE);
+            holder.cart_plus_img.setVisibility(View.VISIBLE);
+            holder.cart_product_quantity.setVisibility(View.VISIBLE);
+        }
         // Populate the data into the template view using the data object
 
         // Return the completed view to render on screen
