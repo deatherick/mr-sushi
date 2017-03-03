@@ -5,9 +5,9 @@
     <item name="ic_menu_manage" type="drawable">@android:drawable/ic_menu_manage</item>
     <item name="ic_menu_share" type="drawable">@android:drawable/ic_menu_share</item>
     <item name="ic_menu_send" type="drawable">@android:drawable/ic_menu_send</item>
-    <item name="ic_dots" type="drawable">@drawable/ic_dots</item>
+<!--    <item name="ic_dots" type="drawable">@drawable/ic_dots</item>
     <item name="ic_shopping_cart" type="drawable">@drawable/ic_shopping_cart</item>
-    <!--<item name="ic_minus" type="drawable">@drawable/ic_minus</item>-->
-    <!--<item name="ic_plus" type="drawable">@drawable/ic_plus</item>-->
-    <!--<item name="ic_remove" type="drawable">@drawable/ic_remove</item>-->
+    <item name="ic_minus" type="drawable">@drawable/ic_minus</item>
+    <item name="ic_plus" type="drawable">@drawable/ic_plus</item>
+    <item name="ic_remove" type="drawable">@drawable/ic_remove</item>-->
 </resources>

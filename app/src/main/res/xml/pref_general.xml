@@ -1,0 +1,10 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <ListPreference
+        android:defaultValue="-1"
+        android:key="location_list"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="Selecciona una ubicación" />
+
+</PreferenceScreen>

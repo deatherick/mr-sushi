@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 import com.somadtech.mrsushi.activities.CartActivity;
 import com.somadtech.mrsushi.activities.ProductListActivity;
+import com.somadtech.mrsushi.activities.SettingsActivity;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
 import com.somadtech.mrsushi.fragments.LocationsFragment;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
@@ -127,7 +128,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             onSectionAttached(2);
         }
         else if(id == R.id.nav_settings ){
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
         }
         else {
             Intent intent = new Intent(this, ProductListActivity.class);

@@ -1246,4 +1246,80 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 new String[] { String.valueOf(banner_id) });
     }
     //endregion
+
+    //region Configurations
+    /**
+     * @param banner Banner
+     * @return int
+     */
+    public long setConfiguration(Banner banner) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BannerContract.BannerEntry._ID, banner.getId());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
+
+
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(BannerContract.BannerEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updateBanner(banner);
+        }
+        return id;
+    }
+
+    /**
+     * @param banner_id long
+     * @return Category
+     */
+    public Banner getConfiguration(int banner_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + BannerContract.BannerEntry.TABLE_NAME + " WHERE "
+                + BannerContract.BannerEntry._ID + " = " + banner_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return new Banner();
+        }
+
+
+        Banner banner = new Banner();
+        banner.setId(c.getInt((c.getColumnIndex(BannerContract.BannerEntry._ID))));
+        banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
+        banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
+        banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+        banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
+
+        return banner;
+    }
+
+    /**
+     * @param banner Banner
+     * @return int
+     */
+    public int updateConfiguration(Banner banner) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
+
+        // updating row
+        return db.update(BannerContract.BannerEntry.TABLE_NAME, values, BannerContract.BannerEntry._ID + " = ?",
+                new String[] { String.valueOf(banner.getId()) });
+    }
+
+    //endregion
 }

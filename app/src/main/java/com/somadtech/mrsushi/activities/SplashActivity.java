@@ -1,6 +1,7 @@
 package com.somadtech.mrsushi.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -42,6 +43,7 @@ import java.util.List;
 public class SplashActivity extends AppCompatActivity {
 
     MrSushiDbHelper mDbHelper;
+    public static final String PREFS_NAME = "configuraciones";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,12 @@ public class SplashActivity extends AppCompatActivity {
 
 //        String url ="http://192.168.1.15:3000/db";
         String url = "http://vardhost.com/mrsushi/api";
+
+
+        //@TODO usar la variable location para obtener los productos de esa ubicacion
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String location = settings.getString("location", "");
 
         // Create a new map of values, where column names are the keys
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -141,38 +149,6 @@ public class SplashActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        String[] covers = new String[]{
-                                "http://logok.org/wp-content/uploads/2014/04/Apple-Logo-black.png"};
-
-//                        mDbHelper.createIngredient(new Ingredient(1, "Atun", "atun", covers[0]));
-//                        mDbHelper.createIngredient(new Ingredient(2, "Pescado", "pescado", covers[0]));
-//                        mDbHelper.createIngredient(new Ingredient(3, "Aguacate con aguacate y mas", "aguacate", covers[0]));
-//                        mDbHelper.createIngredient(new Ingredient(4, "Pulpo", "pulpo", covers[0]));
-//
-//                        mDbHelper.createVariant(new Variant(1, 1, "Camarón", 51, covers[0]));
-//                        mDbHelper.createVariant(new Variant(2, 1, "Cangrego", 51, covers[0]));
-//                        mDbHelper.createVariant(new Variant(3, 1, "Salmón", 67, covers[0]));
-//                        mDbHelper.createVariant(new Variant(4, 1, "Vegetariano", 45, covers[0]));
-
-                        // Insert the new row, returning the primary key value of the new row
-//                        long newRowId = mDbHelper.createCategory(new Category(1, "Ensaladas y entradas", covers[0]));
-//                        mDbHelper.createCategory(new Category(2, "Sopas", covers[0]));
-//                        mDbHelper.createCategory(new Category(3, "Barra Sushi", covers[0]));
-//                        mDbHelper.createCategory(new Category(4, "Combos", covers[0]));
-//                        mDbHelper.createCategory(new Category(5, "Cocina Caliente", covers[0]));
-//                        mDbHelper.createCategory(new Category(6, "Extras", covers[0]));
-//                        mDbHelper.createCategory(new Category(7, "Postres", covers[0]));
-//                        mDbHelper.createCategory(new Category(8, "Bebidas", covers[0]));
-//                        mDbHelper.createCategory(new Category(0, "Test", covers[0]));
-//                        Log.i("Row insercion", String.valueOf(newRowId));
-//
-//
-//                        String[] product_covers = new String[]{
-//                                "https://s3-media4.fl.yelpcdn.com/bphoto/4fWgAz_uHWfhvB0OiS4OVA/348s.jpg"};
-//                        String json = gson.toJson(mDbHelper.getProduct(1));
-//
-//                        Log.i("producto 1: ", json);
-
                     }
                 },
                 new Response.ErrorListener() {

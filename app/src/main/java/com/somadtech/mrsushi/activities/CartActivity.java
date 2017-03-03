@@ -209,6 +209,10 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
             intent.putExtra("fragment_id", 2);
             startActivity(intent);
         }
+        else if(id == R.id.nav_settings ){
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+        }
         else{
             Intent intent = new Intent(this, ProductListActivity.class);
             intent.putExtra("category_id", getCategoryId(item));
