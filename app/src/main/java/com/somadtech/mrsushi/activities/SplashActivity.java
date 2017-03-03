@@ -23,12 +23,13 @@ import com.google.gson.reflect.TypeToken;
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.MySingleton;
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.entities.Banner;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.entities.Product;
-import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.entities.Promotion;
+import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import org.json.JSONException;
@@ -130,11 +131,11 @@ public class SplashActivity extends AppCompatActivity {
                                 mDbHelper.createPromotion(promotion);
                             }
 
-//                            Type promotionListType = new TypeToken<ArrayList<Promotion>>(){}.getType();
-//                            List<Promotion> promotionsListObject = gson.fromJson(obj.getJSONArray("Promotions").toString(), promotionListType);
-//                            for (Promotion promotion: promotionsListObject) {
-//                                mDbHelper.createPromotion(promotion);
-//                            }
+                            Type bannersListType = new TypeToken<ArrayList<Banner>>(){}.getType();
+                            List<Banner> bannerListObject = gson.fromJson(obj.getJSONArray("Banners").toString(), bannersListType);
+                            for (Banner banner: bannerListObject) {
+                                mDbHelper.createBanner(banner);
+                            }
 
 
                         } catch (JSONException e) {

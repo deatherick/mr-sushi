@@ -22,15 +22,19 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.ProductsAdapter;
+import com.somadtech.mrsushi.entities.Banner;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +47,8 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
     MrSushiDbHelper mDbHelper;
     private ActionBarDrawerToggle drawerToggle;
     DrawerLayout drawer;
+    ImageView img_banner;
+    LinearLayout layout_banner;
     private int mNotificationsCount = 0;
 
 
@@ -73,6 +79,13 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
             productList = mDbHelper.getAllProducts();
         }
 
+        layout_banner = (LinearLayout) findViewById(R.id.layout_banner);
+        img_banner = (ImageView) findViewById(R.id.img_banner);
+
+
+
+        setBanner();
+
         adapter = new ProductsAdapter(this, productList);
 
         int CARD_VIEW_COLUMNS;
@@ -89,6 +102,19 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
         new FetchCountTask().execute();
+    }
+
+    private void setBanner(){
+        if(mDbHelper.getAllBanners().size() > 0){
+            Banner banner = mDbHelper.getRandomBanner();
+            Picasso.with(this)
+                    .load(banner.getImage())
+                    .placeholder(R.drawable.bebidas)
+                    .error(R.drawable.bebidas)
+                    .into(img_banner);
+        } else {
+            layout_banner.setVisibility(View.GONE);
+        }
     }
 
     void loadProducts(MenuItem item){
@@ -108,6 +134,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         }
         adapter = new ProductsAdapter(this, productList);
         recyclerView.setAdapter(adapter);
+        setBanner();
     }
 
     @Override

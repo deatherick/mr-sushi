@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.somadtech.mrsushi.entities.Banner;
 import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
@@ -17,6 +18,7 @@ import com.somadtech.mrsushi.entities.Variant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by smt on 2/6/17.
@@ -27,7 +29,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
     private static final String LOG = "MrSushiDbHelper";
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "MrSushi.db";
 
     public MrSushiDbHelper(Context context) {
@@ -42,6 +44,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductContract.SQL_CREATE_PRODUCTS);
         db.execSQL(PromotionContract.SQL_CREATE_PROMOTIONS);
         db.execSQL(VariantContract.SQL_CREATE_VARIANTS);
+        db.execSQL(BannerContract.SQL_CREATE_BANNERS);
 
         // Pivot tables
         db.execSQL(IngredientProductContract.SQL_CREATE_INGREDIENT_PRODUCT);
@@ -58,6 +61,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         db.execSQL(ProductContract.SQL_DELETE_PRODUCTS);
         db.execSQL(PromotionContract.SQL_DELETE_PROMOTIONS);
         db.execSQL(VariantContract.SQL_DELETE_VARIANTS);
+        db.execSQL(BannerContract.SQL_DELETE_BANNERS);
 
         //Pivot tables
         db.execSQL(IngredientProductContract.SQL_DELETE_INGREDIENT_PRODUCT);
@@ -1097,4 +1101,149 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
     //endregion
 
+    //region Banners
+    /**
+     * @param banner Banner
+     * @return int
+     */
+    public long createBanner(Banner banner) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BannerContract.BannerEntry._ID, banner.getId());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
+
+
+        // insert row
+
+        int id = (int) db.insertWithOnConflict(BannerContract.BannerEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            id = updateBanner(banner);
+        }
+        return id;
+    }
+
+    /**
+     * @param banner_id long
+     * @return Category
+     */
+    public Banner getBanner(int banner_id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + BannerContract.BannerEntry.TABLE_NAME + " WHERE "
+                + BannerContract.BannerEntry._ID + " = " + banner_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return new Banner();
+        }
+
+
+        Banner banner = new Banner();
+        banner.setId(c.getInt((c.getColumnIndex(BannerContract.BannerEntry._ID))));
+        banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
+        banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
+        banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+        banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
+
+        return banner;
+    }
+
+    /**
+     * @return ArrayList<Category>
+     */
+    public ArrayList<Banner> getAllBanners() {
+        ArrayList<Banner> banners = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + BannerContract.BannerEntry.TABLE_NAME;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Banner banner = new Banner();
+                banner.setId(c.getInt((c.getColumnIndex(BannerContract.BannerEntry._ID))));
+                banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
+                banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
+                banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+                banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
+
+
+                banners.add(banner);
+            } while (c.moveToNext());
+        }
+
+        return banners;
+    }
+
+    /**
+     * @return ArrayList<Category>
+     */
+    public Banner getRandomBanner() {
+        ArrayList<Banner> banners = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + BannerContract.BannerEntry.TABLE_NAME;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Banner banner = new Banner();
+                banner.setId(c.getInt((c.getColumnIndex(BannerContract.BannerEntry._ID))));
+                banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
+                banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
+                banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+                banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
+
+
+                banners.add(banner);
+            } while (c.moveToNext());
+        }
+        Random rand = new Random();
+
+        int  n = rand.nextInt(banners.size()) ;
+        return banners.get(n);
+    }
+
+    /**
+     * @param banner Banner
+     * @return int
+     */
+    public int updateBanner(Banner banner) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
+
+        // updating row
+        return db.update(BannerContract.BannerEntry.TABLE_NAME, values, BannerContract.BannerEntry._ID + " = ?",
+                new String[] { String.valueOf(banner.getId()) });
+    }
+
+    /**
+     * @param banner_id int
+     */
+    public void deleteBanner(int banner_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(BannerContract.BannerEntry.TABLE_NAME, BannerContract.BannerEntry._ID + " = ?",
+                new String[] { String.valueOf(banner_id) });
+    }
+    //endregion
 }
