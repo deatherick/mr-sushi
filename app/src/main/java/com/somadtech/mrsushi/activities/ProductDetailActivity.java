@@ -256,7 +256,7 @@ Updates the count of notifications in the ActionBar.
 
         // force the ActionBar to relayout its MenuItems.
         // onCreateOptionsMenu(Menu) will be called again.
-        //getActivity().invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 
     /*
@@ -276,5 +276,21 @@ Updates the count of notifications in the ActionBar.
         public void onPostExecute(Integer count) {
             updateNotificationsBadge(count);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == R.id.action_cart){
+            Intent intent = new Intent(this, CartActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

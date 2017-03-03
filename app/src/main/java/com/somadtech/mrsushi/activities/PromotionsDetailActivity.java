@@ -1,5 +1,6 @@
 package com.somadtech.mrsushi.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -60,6 +61,9 @@ public class PromotionsDetailActivity extends AppCompatActivity {
                 cart.setPromotion_product(1);
                 mDbHelper.createCart(cart);
                 finish();
+                Intent intent = new Intent(PromotionsDetailActivity.this, CartActivity.class);
+                startActivity(intent);
+
             }
         });
     }

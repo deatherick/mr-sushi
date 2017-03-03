@@ -297,7 +297,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
 
         // force the ActionBar to relayout its MenuItems.
         // onCreateOptionsMenu(Menu) will be called again.
-        //getActivity().invalidateOptionsMenu();
+        invalidateOptionsMenu();
     }
 
     /*

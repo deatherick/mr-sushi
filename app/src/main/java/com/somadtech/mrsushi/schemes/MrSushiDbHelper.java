@@ -97,7 +97,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
 
         // insert rowste
         int id;
-        if(cart.getObservations().equals("")){
+        if(cart.getObservations().equals("") && cart.getPromotion_product() == 0){
             Cart productInCart = checkProductInCart(product.getId(), variant.getId());
             if(productInCart != null){
                 id = addProductToCart(productInCart.getId());
@@ -122,12 +122,30 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return updateCart(cart);
     }
 
+    private boolean checkPromotionAlreadyTaken(Promotion promotion){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
+                + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + promotion.getTarget().get(0).getId() + " AND "
+                + CartContract.CartEntry.COLUMN_NAME_PROM_PROD + " = " + 1;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     private Cart checkProductInCart(long product_id, int variant_id){
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
                 + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + product_id + " AND "
-                + CartContract.CartEntry.COLUMN_NAME_VARIANT + " = " + variant_id;
+                + CartContract.CartEntry.COLUMN_NAME_VARIANT + " = " + variant_id + " AND "
+                + CartContract.CartEntry.COLUMN_NAME_PROM_PROD + " = " + 0;
 
         Log.e(LOG, selectQuery);
 
@@ -814,7 +832,9 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
             do {
                 int promotion_id = c.getInt(c.getColumnIndex(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID));
                 Promotion promotion = getPromotion(promotion_id);
-                promotions.add(promotion);
+                if(!checkPromotionAlreadyTaken(promotion)){
+                    promotions.add(promotion);
+                }
             } while (c.moveToNext());
         }
 

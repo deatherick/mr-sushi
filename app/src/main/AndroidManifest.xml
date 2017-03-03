@@ -60,7 +60,8 @@
 
         <activity
             android:name=".activities.LocationsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_maps" />
     </application>
 
 </manifest>

@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.somadtech.mrsushi.adapters.PromotionsViewPagerAdapter;
 import com.somadtech.mrsushi.entities.Product;
@@ -248,6 +249,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         mDbHelper.deleteCart(id);
         adapter = new CartAdapter(this, mDbHelper.getAllCart());
         updateListView(adapter);
+        Toast.makeText(getBaseContext(), R.string.product_removed, Toast.LENGTH_SHORT).show();
     }
 
     public void showNoticeDialog() {
