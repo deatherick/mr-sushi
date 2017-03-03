@@ -1,7 +1,9 @@
 package com.somadtech.mrsushi.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -20,6 +22,7 @@ import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.LocationsAdapter;
 import com.somadtech.mrsushi.entities.Location;
+import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
@@ -40,7 +43,7 @@ public class LocationsFragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     MrSushiDbHelper mDbHelper;
     List<Location> locations;
-
+    private int mNotificationsCount = 0;
 
     private OnFragmentInteractionListener mListener;
 
@@ -69,6 +72,7 @@ public class LocationsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mDbHelper = new MrSushiDbHelper(getActivity());
     }
 
@@ -128,6 +132,7 @@ public class LocationsFragment extends Fragment {
         // specify an adapter (see also next example)
         mAdapter = new LocationsAdapter(getContext(), locations);
         mRecyclerView.setAdapter(mAdapter);
+        new FetchCountTask().execute();
     }
 
     @Override
@@ -137,6 +142,12 @@ public class LocationsFragment extends Fragment {
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.location_toolbar);
+
+        MenuItem itemCart = menu.findItem(R.id.action_cart);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+
+        // Update LayerDrawable's BadgeDrawable
+        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
     }
 
     @Override
@@ -198,6 +209,36 @@ public class LocationsFragment extends Fragment {
             }
         }
         return filteredModelList;
+    }
+
+    /*
+   Updates the count of notifications in the ActionBar.
+   */
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+
+        // force the ActionBar to relayout its MenuItems.
+        // onCreateOptionsMenu(Menu) will be called again.
+        //getActivity().invalidateOptionsMenu();
+    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            mNotificationsCount = mDbHelper.getCountCart();
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 
 }

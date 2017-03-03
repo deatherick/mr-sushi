@@ -2,9 +2,7 @@ package com.somadtech.mrsushi;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -27,7 +25,6 @@ import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationsFragment.OnFragmentInteractionListener {
 
     MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
-    private int mNotificationsCount = 1;
     private ActionBarDrawerToggle drawerToggle;
     DrawerLayout drawer;
 
@@ -48,9 +45,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         int  fragment_id = getIntent().getIntExtra("fragment_id", 1);
         onSectionAttached(fragment_id);
-//        if (savedInstanceState == null) {
-//
-//        }
     }
 
     @Override
@@ -91,12 +85,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        //getMenuInflater().inflate(R.menu.main, menu);
 
         // Get the notifications MenuItem and
         // its LayerDrawable (layer-list)
-        MenuItem itemCart = menu.findItem(R.id.action_cart);
-        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+        //MenuItem itemCart = menu.findItem(R.id.action_cart);
+        //LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
 
         // Update LayerDrawable's BadgeDrawable
         //Utils.setBadgeCount(this, icon, mNotificationsCount);
@@ -112,10 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if(id == R.id.action_cart){
+        if(id == R.id.action_cart){
             Intent intent = new Intent(this, CartActivity.class);
             startActivity(intent);
         }
@@ -167,40 +158,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*
-    Updates the count of notifications in the ActionBar.
-     */
-    private void updateNotificationsBadge(int count) {
-        mNotificationsCount = count;
-
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
-        invalidateOptionsMenu();
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
 
-    /*
-    Sample AsyncTask to fetch the notifications count
-    */
-    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Void... params) {
-            // example count. This is where you'd
-            // query your data store for the actual count.
-            mNotificationsCount++;
-            return mNotificationsCount;
-        }
-
-        @Override
-        public void onPostExecute(Integer count) {
-            updateNotificationsBadge(count);
-        }
-    }
 
     public void onSectionAttached(int number) {
         // update the main content by replacing fragments
@@ -227,4 +190,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.e("MainActivity", "Error in creating fragment");
         }
     }
+
 }

@@ -3,6 +3,8 @@ package com.somadtech.mrsushi.activities;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,6 +29,7 @@ import com.somadtech.mrsushi.adapters.ProductsAdapter;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Ingredient;
 import com.somadtech.mrsushi.entities.Product;
+import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
     MrSushiDbHelper mDbHelper;
     private ActionBarDrawerToggle drawerToggle;
     DrawerLayout drawer;
+    private int mNotificationsCount = 0;
 
 
     @Override
@@ -84,6 +88,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(CARD_VIEW_COLUMNS, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        new FetchCountTask().execute();
     }
 
     void loadProducts(MenuItem item){
@@ -123,15 +128,6 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
             loadProducts(item);
         }
 
-       /* else if (id == R.id.nav_gallery) {
-
-        }
-        else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        }*/
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -145,10 +141,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        else if(id == R.id.action_cart){
+        if(id == R.id.action_cart){
             Intent intent = new Intent(this, CartActivity.class);
             startActivity(intent);
 //            finish();
@@ -211,6 +204,13 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         int category_id = getIntent().getIntExtra("category_id", 1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        MenuItem itemCart = menu.findItem(R.id.action_cart);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+
+        // Update LayerDrawable's BadgeDrawable
+        Utils.setBadgeCount(this, icon, mNotificationsCount);
+
         if (category_id != 0) {
             Category category = mDbHelper.getCategory(category_id);
             toolbar.setTitle(category.getItemName());
@@ -287,5 +287,35 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
             }
         }
         return filteredModelList;
+    }
+
+    /*
+  Updates the count of notifications in the ActionBar.
+  */
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+
+        // force the ActionBar to relayout its MenuItems.
+        // onCreateOptionsMenu(Menu) will be called again.
+        //getActivity().invalidateOptionsMenu();
+    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            mNotificationsCount = mDbHelper.getCountCart();
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 }

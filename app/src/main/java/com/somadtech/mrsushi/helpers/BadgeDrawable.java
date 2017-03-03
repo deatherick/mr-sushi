@@ -50,8 +50,8 @@ public class BadgeDrawable extends Drawable {
         }
 
         Rect bounds = getBounds();
-        float width = bounds.right - bounds.left;
-        float height = bounds.bottom - bounds.top;
+        float width = bounds.right - bounds.left + 10;
+        float height = bounds.bottom - bounds.top + 10;
 
         // Position the badge in the top-right quadrant of the icon.
         float radius = ((Math.min(width, height) / 2) - 1) / 2;
@@ -59,13 +59,13 @@ public class BadgeDrawable extends Drawable {
         float centerY = radius + 1;
 
         // Draw badge circle.
-        canvas.drawCircle(centerX, centerY, radius, mBadgePaint);
+        canvas.drawCircle(centerX, centerY - 5, radius, mBadgePaint);
 
         // Draw badge count text inside the circle.
         mTextPaint.getTextBounds(mCount, 0, mCount.length(), mTxtRect);
         float textHeight = mTxtRect.bottom - mTxtRect.top;
         float textY = centerY + (textHeight / 2f);
-        canvas.drawText(mCount, centerX, textY, mTextPaint);
+        canvas.drawText(mCount, centerX, textY - 5, mTextPaint);
     }
 
     /*

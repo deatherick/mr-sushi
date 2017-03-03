@@ -218,6 +218,18 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return carts;
     }
 
+    public int getCountCart(){
+        ArrayList<Cart> carts = getAllCart();
+        if(carts.size() == 0){
+            return 0;
+        }
+        int contador = 0;
+        for (Cart cart: carts) {
+            contador += cart.getQuantity();
+        }
+        return contador;
+    }
+
     /**
      * @param cart Cart
      * @return int

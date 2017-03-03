@@ -1,6 +1,8 @@
 package com.somadtech.mrsushi.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.entities.Location;
+import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +29,7 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
     DrawerLayout drawer;
     MrSushiDbHelper mDbHelper;
     TextView txtLocationName, txtLocationDesc;
+    private int mNotificationsCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,7 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         setContentView(R.layout.activity_location);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.location_toolbar);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -52,6 +57,7 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
 
         Location location = mDbHelper.getLocation(location_id);
         load_location(location);
+        new FetchCountTask().execute();
 
     }
 
@@ -78,9 +84,13 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Ubicaciones");
+        MenuItem itemCart = menu.findItem(R.id.action_cart);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+
+        // Update LayerDrawable's BadgeDrawable
+        Utils.setBadgeCount(this, icon, mNotificationsCount);
 
         return true;
     }
@@ -123,8 +133,40 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
     @Override
     public void onBackPressed() {
         finish();
-        Intent intent = new Intent(LocationsActivity.this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("fragment_id", 2);
         startActivity(intent);
+    }
+
+
+    /*
+   Updates the count of notifications in the ActionBar.
+   */
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+
+        // force the ActionBar to relayout its MenuItems.
+        // onCreateOptionsMenu(Menu) will be called again.
+        //getActivity().invalidateOptionsMenu();
+    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            mNotificationsCount = mDbHelper.getCountCart();
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
     }
 
 }

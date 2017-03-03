@@ -3,6 +3,8 @@ package com.somadtech.mrsushi.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.LayerDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +25,7 @@ import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.activities.ProductListActivity;
 import com.somadtech.mrsushi.adapters.CategoryAdapter;
 import com.somadtech.mrsushi.entities.Category;
+import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 /**
@@ -35,6 +38,7 @@ public class CategoriesFragment extends Fragment {
     FragmentActivity listener;
     ListView mListView;
     MrSushiDbHelper mDbHelper;
+    private int mNotificationsCount = 0;
     // This event fires 1st, before creation of fragment or any views
     // The onAttach method is called when the Fragment instance is associated with an Activity.
     // This does not mean the Activity is fully initialized.
@@ -88,7 +92,7 @@ public class CategoriesFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
+        new FetchCountTask().execute();
 
     }
 
@@ -116,6 +120,12 @@ public class CategoriesFragment extends Fragment {
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.category_toolbar);
+
+        MenuItem itemCart = menu.findItem(R.id.action_cart);
+        LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
+
+        // Update LayerDrawable's BadgeDrawable
+        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
     }
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
@@ -169,6 +179,36 @@ public class CategoriesFragment extends Fragment {
         for (int i = 0; i < menu.size(); ++i) {
             MenuItem item = menu.getItem(i);
             if (item != exception) item.setVisible(visible);
+        }
+    }
+
+    /*
+    Updates the count of notifications in the ActionBar.
+    */
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+
+        // force the ActionBar to relayout its MenuItems.
+        // onCreateOptionsMenu(Menu) will be called again.
+        //getActivity().invalidateOptionsMenu();
+    }
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            mNotificationsCount = mDbHelper.getCountCart();
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
         }
     }
 }
