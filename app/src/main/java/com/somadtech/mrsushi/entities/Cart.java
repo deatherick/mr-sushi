@@ -15,6 +15,7 @@ public class Cart {
     private int state;
     private int quantity;
     private int promotion_product;
+    private int promotion_target;
 
     public Cart(){
 
@@ -28,6 +29,7 @@ public class Cart {
         this.state = 1;
         this.quantity = 1;
         this.promotion_product = 0;
+        this.promotion_target = 0;
     }
 
     public int getId() {
@@ -92,5 +94,13 @@ public class Cart {
 
     public void setPromotion_product(int promotion_product) {
         this.promotion_product = promotion_product;
+    }
+
+    public int getPromotion_target() {
+        return promotion_target;
+    }
+
+    public void setPromotion_target(int promotion_target) {
+        this.promotion_target = promotion_target;
     }
 }

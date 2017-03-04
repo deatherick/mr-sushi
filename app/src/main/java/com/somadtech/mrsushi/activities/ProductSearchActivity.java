@@ -39,7 +39,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class ProductSearchActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private RecyclerView recyclerView;
     private ProductsAdapter adapter;
@@ -85,12 +85,7 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
-        int category_id = getIntent().getIntExtra("category_id", 1);
-        if (category_id != 0) {
-            productList = mDbHelper.getProductsByCategory(category_id);
-        } else {
-            productList = mDbHelper.getAllProducts();
-        }
+        productList =  new ArrayList<>();
 
         layout_banner = (LinearLayout) findViewById(R.id.layout_banner);
         img_banner = (ImageView) findViewById(R.id.img_banner);
@@ -129,38 +124,18 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
                 img_banner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(ProductListActivity.this, ProductDetailActivity.class);
+                        Intent intent = new Intent(ProductSearchActivity.this, ProductDetailActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("product_id", banner.getTarget().getId());
                         startActivity(intent);
                     }
                 });
             }
-
         } else {
             layout_banner.setVisibility(View.GONE);
         }
     }
 
-    void loadProducts(MenuItem item){
-        String category_slug = item.getTitleCondensed().toString();
-        if (!category_slug.equals("")) {
-            int category_id = mDbHelper.getCategoryId(category_slug);
-            if(category_id != 0){
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                Category category = mDbHelper.getCategory(category_id);
-                toolbar.setTitle(category.getItemName());
-                productList = mDbHelper.getProductsByCategory(category_id);
-            } else {
-                productList = mDbHelper.getAllProducts();
-            }
-        } else {
-            productList = mDbHelper.getAllProducts();
-        }
-        adapter = new ProductsAdapter(this, productList);
-        recyclerView.setAdapter(adapter);
-        setBanner();
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -169,10 +144,6 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
 
         if (id == R.id.nav_new) {
             Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
-        else if(id == R.id.nav_search_product ){
-            Intent intent = new Intent(this, ProductSearchActivity.class);
             startActivity(intent);
         }
         else if(id == NAV_LOCATIONS ){
@@ -185,12 +156,24 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
             startActivity(intent);
         }
         else{
-            loadProducts(item);
+            Intent intent = new Intent(this, ProductListActivity.class);
+            intent.putExtra("category_id", getCategoryId(item));
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    int getCategoryId(MenuItem item){
+        String category_slug = item.getTitleCondensed().toString();
+        if (!category_slug.equals("")) {
+            int category_id = mDbHelper.getCategoryId(category_slug);
+            return category_id;
+        } else {
+            return 1;
+        }
     }
 
     @Override
@@ -264,19 +247,13 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         int category_id = getIntent().getIntExtra("category_id", 1);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Buscador de productos");
 
         MenuItem itemCart = menu.findItem(R.id.action_cart);
         LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
 
         // Update LayerDrawable's BadgeDrawable
         Utils.setBadgeCount(this, icon, mNotificationsCount);
-
-        if (category_id != 0) {
-            Category category = mDbHelper.getCategory(category_id);
-            toolbar.setTitle(category.getItemName());
-        } else {
-            toolbar.setTitle(R.string.products_toolbar);
-        }
 
         return true;
     }
@@ -293,15 +270,22 @@ public class ProductListActivity extends AppCompatActivity implements Navigation
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                productList = mDbHelper.getAllProducts();
+                final List<Product> filteredModelList = filter(productList, query);
+                adapter = new ProductsAdapter(getBaseContext(), productList);
+                adapter.setFilter(filteredModelList);
+
+                recyclerView.setAdapter(adapter);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-
-                final List<Product> filteredModelList = filter(productList, newText);
-
-                adapter.setFilter(filteredModelList);
+                if(newText.equals("") || newText == null){
+                    adapter = new ProductsAdapter(getBaseContext(), new ArrayList<Product>());
+                    recyclerView.setAdapter(adapter);
+                    return false;
+                }
 
                 return true;
             }

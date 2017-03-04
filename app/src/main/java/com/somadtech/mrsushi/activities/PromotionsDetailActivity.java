@@ -59,6 +59,7 @@ public class PromotionsDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Cart cart = new Cart(product, variant, "");
                 cart.setPromotion_product(1);
+                cart.setPromotion_target(promotion.getTrigger().get(0).getId());
                 mDbHelper.createCart(cart);
                 finish();
                 Intent intent = new Intent(PromotionsDetailActivity.this, CartActivity.class);

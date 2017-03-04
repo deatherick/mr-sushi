@@ -25,6 +25,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.somadtech.mrsushi.adapters.PromotionsViewPagerAdapter;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Promotion;
 import com.somadtech.mrsushi.fragments.EmptyCartDialogFragment;
@@ -54,6 +55,8 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
     private ImageView[] dots;
     private PromotionsViewPagerAdapter mAdapter;
     private List<Promotion> promotion_list;
+    final int NAV_LOCATIONS = 1000001;
+    final int NAV_SETTINGS = 1000002;
 
     private int[] mImageResources = {
             R.drawable.sopas,
@@ -95,6 +98,17 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ArrayList<Category> categories = mDbHelper.getAllCategories();
+        Menu menu = navigationView.getMenu();
+        for (Category category: categories) {
+            menu.add(Menu.NONE, category.getItemId(), Menu.NONE, category.getItemName())
+                    .setTitleCondensed(category.getSlug())
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        menu.add(Menu.NONE, NAV_LOCATIONS, Menu.NONE, "Ubicaciones")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, NAV_SETTINGS, Menu.NONE, "Ajustes")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         navigationView.setNavigationItemSelectedListener(this);
 
         Button btn_empty_cart = (Button) findViewById(R.id.btn_empty_cart);
@@ -204,12 +218,16 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        else if(id == R.id.nav_locations ){
+        else if(id == R.id.nav_search_product ){
+            Intent intent = new Intent(this, ProductSearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == NAV_LOCATIONS ){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("fragment_id", 2);
             startActivity(intent);
         }
-        else if(id == R.id.nav_settings ){
+        else if(id == NAV_SETTINGS ){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
@@ -250,6 +268,13 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onRemoveClickListener(int id) {
+        Cart cart = mDbHelper.getCart(id);
+        if(cart.getPromotion_target() != 0){
+            Cart newRow = mDbHelper.checkProductInCart(cart.getPromotion_target(), 0);
+            if(newRow != null){
+                mDbHelper.deleteCart(newRow.getId());
+            }
+        }
         mDbHelper.deleteCart(id);
         adapter = new CartAdapter(this, mDbHelper.getAllCart());
         updateListView(adapter);

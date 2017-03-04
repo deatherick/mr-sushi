@@ -11,6 +11,7 @@ public class Banner {
     String slug;
     String description;
     String image;
+    Product target;
 
     public int getId() {
         return id;
@@ -50,5 +51,13 @@ public class Banner {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Product getTarget() {
+        return target;
+    }
+
+    public void setTarget(Product target) {
+        this.target = target;
     }
 }

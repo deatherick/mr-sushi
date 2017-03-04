@@ -32,11 +32,14 @@ import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.adapters.IngredientsAdapter;
 import com.somadtech.mrsushi.adapters.VariantsAdapter;
 import com.somadtech.mrsushi.entities.Cart;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Variant;
 import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class ProductDetailActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -55,6 +58,8 @@ public class ProductDetailActivity extends AppCompatActivity implements Navigati
 
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewVariants;
+    final int NAV_LOCATIONS = 1000001;
+    final int NAV_SETTINGS = 1000002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +85,17 @@ public class ProductDetailActivity extends AppCompatActivity implements Navigati
         drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ArrayList<Category> categories = mDbHelper.getAllCategories();
+        Menu menu = navigationView.getMenu();
+        for (Category category: categories) {
+            menu.add(Menu.NONE, category.getItemId(), Menu.NONE, category.getItemName())
+                    .setTitleCondensed(category.getSlug())
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        menu.add(Menu.NONE, NAV_LOCATIONS, Menu.NONE, "Ubicaciones")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, NAV_SETTINGS, Menu.NONE, "Ajustes")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         navigationView.setNavigationItemSelectedListener(this);
 
         txtName = (TextView) findViewById(R.id.txtName);
@@ -171,12 +187,16 @@ public class ProductDetailActivity extends AppCompatActivity implements Navigati
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        else if(id == R.id.nav_locations ){
+        else if(id == R.id.nav_search_product ){
+            Intent intent = new Intent(this, ProductSearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == NAV_LOCATIONS ){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("fragment_id", 2);
             startActivity(intent);
         }
-        else if(id == R.id.nav_settings ){
+        else if(id == NAV_SETTINGS ){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }

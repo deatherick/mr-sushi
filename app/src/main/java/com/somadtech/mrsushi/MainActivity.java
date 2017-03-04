@@ -18,16 +18,23 @@ import android.view.MenuItem;
 
 import com.somadtech.mrsushi.activities.CartActivity;
 import com.somadtech.mrsushi.activities.ProductListActivity;
+import com.somadtech.mrsushi.activities.ProductSearchActivity;
 import com.somadtech.mrsushi.activities.SettingsActivity;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.fragments.CategoriesFragment;
 import com.somadtech.mrsushi.fragments.LocationsFragment;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationsFragment.OnFragmentInteractionListener {
 
     MrSushiDbHelper mDbHelper = new MrSushiDbHelper(this);
     private ActionBarDrawerToggle drawerToggle;
     DrawerLayout drawer;
+
+    final int NAV_LOCATIONS = 1000001;
+    final int NAV_SETTINGS = 1000002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +50,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ArrayList<Category> categories = mDbHelper.getAllCategories();
+        Menu menu = navigationView.getMenu();
+        for (Category category: categories) {
+            menu.add(Menu.NONE, category.getItemId(), Menu.NONE, category.getItemName())
+                    .setTitleCondensed(category.getSlug())
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        menu.add(Menu.NONE, NAV_LOCATIONS, Menu.NONE, "Ubicaciones")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, NAV_SETTINGS, Menu.NONE, "Ajustes")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         navigationView.setNavigationItemSelectedListener(this);
         int  fragment_id = getIntent().getIntExtra("fragment_id", 1);
         onSectionAttached(fragment_id);
+        invalidateOptionsMenu();
     }
 
     @Override
@@ -84,22 +104,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.main, menu);
-
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-        //MenuItem itemCart = menu.findItem(R.id.action_cart);
-        //LayerDrawable icon = (LayerDrawable) itemCart.getIcon();
-
-        // Update LayerDrawable's BadgeDrawable
-        //Utils.setBadgeCount(this, icon, mNotificationsCount);
-
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -124,10 +128,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_new) {
             onSectionAttached(1);
         }
-        else if(id == R.id.nav_locations ){
+        else if(id == R.id.nav_search_product ){
+            Intent intent = new Intent(this, ProductSearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == NAV_LOCATIONS ){
             onSectionAttached(2);
         }
-        else if(id == R.id.nav_settings ){
+        else if(id == NAV_SETTINGS ){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }

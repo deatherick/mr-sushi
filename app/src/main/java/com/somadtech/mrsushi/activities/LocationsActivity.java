@@ -18,10 +18,13 @@ import android.widget.TextView;
 
 import com.somadtech.mrsushi.MainActivity;
 import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Location;
 import com.somadtech.mrsushi.helpers.Utils;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 public class LocationsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -30,6 +33,9 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
     MrSushiDbHelper mDbHelper;
     TextView txtLocationName, txtLocationDesc;
     private int mNotificationsCount = 0;
+
+    final int NAV_LOCATIONS = 1000001;
+    final int NAV_SETTINGS = 1000002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,8 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         toolbar.setTitle(R.string.location_toolbar);
         setSupportActionBar(toolbar);
 
+        mDbHelper = new MrSushiDbHelper(this);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -47,12 +55,22 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
         drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        ArrayList<Category> categories = mDbHelper.getAllCategories();
+        Menu menu = navigationView.getMenu();
+        for (Category category: categories) {
+            menu.add(Menu.NONE, category.getItemId(), Menu.NONE, category.getItemName())
+                    .setTitleCondensed(category.getSlug())
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+        menu.add(Menu.NONE, NAV_LOCATIONS, Menu.NONE, "Ubicaciones")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(Menu.NONE, NAV_SETTINGS, Menu.NONE, "Ajustes")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         navigationView.setNavigationItemSelectedListener(this);
 
         txtLocationName = (TextView) findViewById(R.id.txtLocationName);
         txtLocationDesc = (TextView) findViewById(R.id.txtLocationDesc);
 
-        mDbHelper = new MrSushiDbHelper(this);
         int location_id = getIntent().getIntExtra("location_id", 1);
 
         Location location = mDbHelper.getLocation(location_id);
@@ -114,12 +132,16 @@ public class LocationsActivity extends AppCompatActivity implements NavigationVi
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        else if(id == R.id.nav_locations ){
+        else if(id == R.id.nav_search_product ){
+            Intent intent = new Intent(this, ProductSearchActivity.class);
+            startActivity(intent);
+        }
+        else if(id == NAV_LOCATIONS ){
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("fragment_id", 2);
             startActivity(intent);
         }
-        else if(id == R.id.nav_settings ){
+        else if(id == NAV_SETTINGS ){
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }

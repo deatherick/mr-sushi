@@ -44,7 +44,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("product_id", product.getId());
                     mContext.startActivity(intent);
                 }

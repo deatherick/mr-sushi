@@ -14,6 +14,7 @@ public class BannerContract {
                     BannerEntry.COLUMN_NAME_NAME + " TEXT," +
                     BannerEntry.COLUMN_NAME_SLUG + " TEXT," +
                     BannerEntry.COLUMN_NAME_DESC + " TEXT," +
+                    BannerEntry.COLUMN_NAME_TARGET + " INTEGER," +
                     BannerEntry.COLUMN_NAME_IMAGE + " TEXT)";
 
     static final String SQL_DELETE_BANNERS =
@@ -29,6 +30,7 @@ public class BannerContract {
         static final String COLUMN_NAME_NAME = "name";
         static final String COLUMN_NAME_SLUG = "slug";
         static final String COLUMN_NAME_DESC = "description";
+        static final String COLUMN_NAME_TARGET = "target";
         static final String COLUMN_NAME_IMAGE = "image";
     }
 }

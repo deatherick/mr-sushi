@@ -97,6 +97,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
         values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
         values.put(CartContract.CartEntry.COLUMN_NAME_PROM_PROD, cart.getPromotion_product());
+        values.put(CartContract.CartEntry.COLUMN_NAME_PROM_TARG, cart.getPromotion_target());
         values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
 
         // insert rowste
@@ -143,13 +144,12 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         }
     }
 
-    private Cart checkProductInCart(long product_id, int variant_id){
+    public Cart checkProductInCart(long product_id, int variant_id){
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
                 + CartContract.CartEntry.COLUMN_NAME_PRODUCT + " = " + product_id + " AND "
-                + CartContract.CartEntry.COLUMN_NAME_VARIANT + " = " + variant_id + " AND "
-                + CartContract.CartEntry.COLUMN_NAME_PROM_PROD + " = " + 0;
+                + CartContract.CartEntry.COLUMN_NAME_VARIANT + " = " + variant_id;
 
         Log.e(LOG, selectQuery);
 
@@ -169,6 +169,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
         cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
         cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
+        cart.setPromotion_target(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_TARG)));
         cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
 
         return cart;
@@ -203,6 +204,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
         cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
         cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
+        cart.setPromotion_target(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_TARG)));
         cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
 
         return cart;
@@ -269,6 +271,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(CartContract.CartEntry.COLUMN_NAME_ORDER, cart.getOrder_id());
         values.put(CartContract.CartEntry.COLUMN_NAME_QTY, cart.getQuantity());
         values.put(CartContract.CartEntry.COLUMN_NAME_PROM_PROD, cart.getPromotion_product());
+        values.put(CartContract.CartEntry.COLUMN_NAME_PROM_TARG, cart.getPromotion_target());
         values.put(CartContract.CartEntry.COLUMN_NAME_STATE, cart.getState());
 
         // updating row
@@ -1114,6 +1117,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_TARGET, banner.getTarget().getId());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
 
 
@@ -1152,6 +1156,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
         banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
         banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+        banner.setTarget(getProduct(c.getInt(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_TARGET))));
         banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
 
         return banner;
@@ -1177,6 +1182,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
                 banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
                 banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+                banner.setTarget(getProduct(c.getInt(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_TARGET))));
                 banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
 
 
@@ -1207,6 +1213,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
                 banner.setName((c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_NAME))));
                 banner.setSlug(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_SLUG)));
                 banner.setDescription(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_DESC)));
+                banner.setTarget(getProduct(c.getInt(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_TARGET))));
                 banner.setImage(c.getString(c.getColumnIndex(BannerContract.BannerEntry.COLUMN_NAME_IMAGE)));
 
 
@@ -1230,6 +1237,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         values.put(BannerContract.BannerEntry.COLUMN_NAME_NAME, banner.getName());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_SLUG, banner.getSlug());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_DESC, banner.getSlug());
+        values.put(BannerContract.BannerEntry.COLUMN_NAME_TARGET, banner.getTarget().getId());
         values.put(BannerContract.BannerEntry.COLUMN_NAME_IMAGE, banner.getImage());
 
         // updating row
