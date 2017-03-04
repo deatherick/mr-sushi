@@ -175,6 +175,36 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return cart;
     }
 
+    public Cart checkProductTrigger(long product_id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + CartContract.CartEntry.TABLE_NAME + " WHERE "
+                + CartContract.CartEntry.COLUMN_NAME_PROM_TARG + " = " + product_id;
+
+        Log.e(LOG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null && c.getCount() > 0){
+            c.moveToFirst();
+        } else {
+            return null;
+        }
+
+        Cart cart = new Cart();
+        cart.setId(c.getInt(c.getColumnIndex(CartContract.CartEntry._ID)));
+        cart.setProduct(getProduct(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PRODUCT))));
+        cart.setVariant(getVariant(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_VARIANT))));
+        cart.setOrder_id(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_ORDER)));
+        cart.setObservations(c.getString(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_OBSERVATIONS)));
+        cart.setQuantity(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_QTY)));
+        cart.setPromotion_product(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_PROD)));
+        cart.setPromotion_target(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_PROM_TARG)));
+        cart.setState(c.getInt(c.getColumnIndex(CartContract.CartEntry.COLUMN_NAME_STATE)));
+
+        return cart;
+    }
+
 
 
     /**
@@ -870,6 +900,28 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    public List<Product> getProductsTriggerByPromotion(int promotion_id){
+        ArrayList<Product> products = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + ProductPromotionsContract.ProductPromotionsEntry.TABLE_NAME + " WHERE " +
+                ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PROMOTION_ID + " = " + promotion_id + " AND " +
+                ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_TYPE + " = '" + ProductPromotionsContract.ProductPromotionsEntry.TRIGGER+"'";
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                int product_id = c.getInt((c.getColumnIndex(ProductPromotionsContract.ProductPromotionsEntry.COLUMN_NAME_PRODUCT_ID)));
+                Product product = getProduct(product_id);
+                products.add(product);
+            } while (c.moveToNext());
+        }
+        return products;
+    }
+
     //endregion
 
     //region Ingredients
@@ -1061,6 +1113,7 @@ public class MrSushiDbHelper extends SQLiteOpenHelper {
         promotion.setDescription(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_DESC)));
         promotion.setImage_small(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_S)));
         promotion.setImage_large(c.getString(c.getColumnIndex(PromotionContract.PromotionEntry.COLUMN_NAME_IMAGE_L)));
+        promotion.setTrigger(getProductsTriggerByPromotion(promotion_id));
         promotion.setTarget(getProductsTargetByPromotion(promotion_id));
 
         return promotion;

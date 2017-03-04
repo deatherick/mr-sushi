@@ -2,6 +2,7 @@ package com.somadtech.mrsushi.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.LayerDrawable;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.DialogFragment;
@@ -11,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -24,17 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.somadtech.mrsushi.MainActivity;
+import com.somadtech.mrsushi.R;
+import com.somadtech.mrsushi.adapters.CartAdapter;
 import com.somadtech.mrsushi.adapters.PromotionsViewPagerAdapter;
+import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.entities.Category;
 import com.somadtech.mrsushi.entities.Product;
 import com.somadtech.mrsushi.entities.Promotion;
 import com.somadtech.mrsushi.fragments.EmptyCartDialogFragment;
 import com.somadtech.mrsushi.helpers.CartClickListener;
-import com.somadtech.mrsushi.MainActivity;
-import com.somadtech.mrsushi.R;
 import com.somadtech.mrsushi.helpers.Utils;
-import com.somadtech.mrsushi.adapters.CartAdapter;
-import com.somadtech.mrsushi.entities.Cart;
 import com.somadtech.mrsushi.schemes.MrSushiDbHelper;
 
 import java.util.ArrayList;
@@ -269,15 +269,23 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onRemoveClickListener(int id) {
         Cart cart = mDbHelper.getCart(id);
-        if(cart.getPromotion_target() != 0){
-            Cart newRow = mDbHelper.checkProductInCart(cart.getPromotion_target(), 0);
-            if(newRow != null){
-                mDbHelper.deleteCart(newRow.getId());
-            }
+        Cart newRow = mDbHelper.checkProductTrigger(cart.getProduct().getId());
+        if(newRow != null){
+            mDbHelper.deleteCart(newRow.getId());
         }
+
         mDbHelper.deleteCart(id);
         adapter = new CartAdapter(this, mDbHelper.getAllCart());
         updateListView(adapter);
+        ArrayList<Cart> cart_rows = mDbHelper.getAllCart();
+        ArrayList<Product> product_rows = new ArrayList<>();
+
+        for (Cart cartn: cart_rows) {
+            product_rows.add(cartn.getProduct());
+        }
+        promotion_list = mDbHelper.getPromotionsByProductsTrigger(product_rows);
+
+        setReference();
         Toast.makeText(getBaseContext(), R.string.product_removed, Toast.LENGTH_SHORT).show();
     }
 
