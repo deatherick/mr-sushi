@@ -11,14 +11,15 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/imageView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/logo_sushi"
-            android:id="@+id/imageView3"
             android:layout_marginLeft="100dp"
-            android:layout_marginRight="100dp"
             android:layout_marginTop="125dp"
-            android:layout_marginBottom="75dp" />
+            android:layout_marginRight="100dp"
+            android:layout_marginBottom="75dp"
+            android:contentDescription="Logo"
+            app:srcCompat="@drawable/logo_sushi" />
     </LinearLayout>
 
     <RelativeLayout
